@@ -45,6 +45,11 @@ def login():
 
         return render_template('login.html', form=form,  error=error)
 
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    return render_template('signup.html') # TODO
+
+
 @app.route('/profile')
 @login_required
 def profile():
