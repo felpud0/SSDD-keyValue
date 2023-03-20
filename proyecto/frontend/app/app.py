@@ -1,4 +1,4 @@
-from flask import Flask, render_template, send_from_directory, url_for, request, redirect
+from flask import Flask, render_template, send_from_directory, url_for, request, redirect, flash
 from flask_login import LoginManager, login_manager, current_user, login_user, login_required, logout_user
 import requests
 import os
@@ -51,16 +51,22 @@ def signup():
     if request.method == 'GET':
         return render_template('signup.html')
     
+    error = None
     form = SignUpForm(request.form)
-    if not form.validate():
-        return "Error en el formulario"
-    
-    user = User(1, form.name.data, form.email.data, form.password.data)
+    if not form.validate_on_submit():
+        error = 'Invalid Credentials. Please try again.'
+        
     # TODO 1: Añadir el usuario a la BD? 
-    return "Registrado "+form.email.data
-    
-
-
+    user = User(2, form.name.data.encode('utf-8') , form.email.data.encode('utf-8'), form.password.data.encode('utf-8'))
+    return "Registrado " + str(user.name) + " " + str(user.email)
+def flash_errors(form):
+    """Flashes form errors"""
+    for field, errors in form.errors.items():
+        for error in errors:
+            flash(u"Error in the %s field - %s" % (
+                getattr(form, field).label.text,
+                error
+            ), 'error')
 
 @app.route('/profile')
 @login_required
