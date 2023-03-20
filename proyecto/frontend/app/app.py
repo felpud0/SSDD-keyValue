@@ -7,7 +7,7 @@ import os
 from models import users, User
 
 # Login
-from forms import LoginForm
+from forms import LoginForm, SignUpForm
 
 app = Flask(__name__, static_url_path='')
 login_manager = LoginManager()
@@ -45,19 +45,19 @@ def login():
 
         return render_template('login.html', form=form,  error=error)
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
 
     if request.method == 'GET':
         return render_template('signup.html')
     
-    form = RegisterForm(request.form)
+    form = SignUpForm(request.form)
     if not form.validate():
-        return
+        return "Error en el formulario"
     
     user = User(1, form.name.data, form.email.data, form.password.data)
     # TODO 1: Añadir el usuario a la BD? 
-    return redirect(url_for('index'))
+    return "Registrado "+form.email.data
     
 
 
