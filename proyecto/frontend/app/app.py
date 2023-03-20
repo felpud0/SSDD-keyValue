@@ -34,14 +34,13 @@ def login():
         error = None
         form = LoginForm(None if request.method != 'POST' else request.form)
         if request.method == "POST" and form.validate():
-            if form.email.data != 'admin@um.es' or form.password.data != 'admin':
+            if not sendLogin(form.email.data, form.password.data):
                 error = 'Invalid Credentials. Please try again.'
+
             else:
-                user = User(1, 'admin', form.email.data.encode('utf-8'),
-                            form.password.data.encode('utf-8'))
-                users.append(user)
-                login_user(user, remember=form.remember_me.data)
-                return redirect(url_for('index'))
+                user = User(1, 'name', form.email.data, form.password.data)
+                login_user(user)
+                return redirect(url_for('profile'))
 
         return render_template('login.html', form=form,  error=error)
 
@@ -85,6 +84,14 @@ def load_user(user_id):
         if user.id == int(user_id):
             return user
     return None
+
+def sendLogin(email, password):
+    login = {'email': email, 'password': password}
+    respuesta = request.post('http://localhost:8080/Service/checkLogin', json=login)
+    flash(respuesta.status_code)
+    if respuesta.status_code == 200:
+        return True
+    return False
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
