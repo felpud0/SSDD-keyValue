@@ -87,7 +87,7 @@ def load_user(user_id):
 
 def sendLogin(email, password):
     login = {'email': email, 'password': password}
-    respuesta = request.post('http://localhost:8080/Service/checkLogin', json=login)
+    respuesta = requests.post('http://localhost:8080/Service/checkLogin', json=login)
     flash(respuesta.status_code)
     if respuesta.status_code == 200:
         return True
