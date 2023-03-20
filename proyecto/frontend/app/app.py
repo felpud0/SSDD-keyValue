@@ -47,7 +47,19 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    return render_template('signup.html') # TODO
+
+    if request.method == 'GET':
+        return render_template('signup.html')
+    
+    form = RegisterForm(request.form)
+    if not form.validate():
+        return
+    
+    user = User(1, form.name.data, form.email.data, form.password.data)
+    # TODO 1: Añadir el usuario a la BD? 
+    return redirect(url_for('index'))
+    
+
 
 
 @app.route('/profile')
