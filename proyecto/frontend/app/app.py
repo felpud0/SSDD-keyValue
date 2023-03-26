@@ -38,7 +38,7 @@ def login():
                 error = 'Invalid Credentials. Please try again.'
 
             else:
-                user = User(1, 'name', form.email.data, form.password.data)
+                user = User(1, 'name', form.email.data.encode('utf-8'), form.password.data.encode('utf-8'))
                 login_user(user)
                 return redirect(url_for('profile'))
 
@@ -56,7 +56,11 @@ def signup():
         error = 'Invalid Credentials. Please try again.'
         
     # TODO 1: Añadir el usuario a la BD? 
-    user = User(2, form.name.data.encode('utf-8') , form.email.data.encode('utf-8'), form.password.data.encode('utf-8'))
+    name = form.name.data.encode('utf-8')
+    email = form.email.data.encode('utf-8')
+    passw = form.password.data.encode('utf-8')
+    user = User(2, name , email, passw)
+
     return "Registrado " + str(user.name) + " " + str(user.email)
 def flash_errors(form):
     """Flashes form errors"""
@@ -87,7 +91,9 @@ def load_user(user_id):
 
 def sendLogin(email, password):
     login = {'email': email, 'password': password}
-    respuesta = requests.post('http://localhost:8080/Service/checkLogin', json=login)
+    # Por defecto se crea una red con un servicio DNS, donde el nombre
+    # de cada servidor es el nombre de cada servicio (diapositiva 38 - docker)
+    respuesta = requests.post('http://backend-rest:8080/Service/checkLogin', json=login)
     flash(respuesta.status_code)
     if respuesta.status_code == 200:
         return True
