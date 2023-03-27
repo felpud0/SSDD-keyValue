@@ -30,24 +30,28 @@ def index():
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
-    else:
-        error = None
-        form = LoginForm(None if request.method != 'POST' else request.form)
-        if request.method == "POST" and form.validate():
-            if not sendLogin(form.email.data, form.password.data):
-                error = 'Invalid Credentials. Please try again.'
+    
+    error = None
+    form = LoginForm(None if request.method != 'POST' else request.form)
 
-            else:
-                userInfo = getUserInfo(form.email.data)
-                user = User(1, 
-                            userInfo['name'], 
-                            userInfo['email'], 
-                            userInfo['password'].encode('utf-8'))
-                login_user(user)
-                users.append(user)
-                return redirect(url_for('profile'))
+    if not(request.method == "POST" and form.validate()):
+        return render_template('login.html', form=form,  error=error)
+    
+    if not sendLogin(form.email.data, form.password.data):
+        error = 'Invalid Credentials. Please try again.'
+        return render_template('login.html', form=form,  error=error)
 
-    return render_template('login.html', form=form,  error=error)
+    
+    userInfo = getUserInfo(form.email.data)
+    user = User(1, 
+                userInfo['name'], 
+                userInfo['email'], 
+                userInfo['password'].encode('utf-8'))
+    
+    login_user(user)
+    users.append(user)
+    return redirect(url_for('profile'))
+
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
