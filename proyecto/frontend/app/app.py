@@ -40,9 +40,10 @@ def login():
             else:
                 user = User(1, 'name', form.email.data.encode('utf-8'), form.password.data.encode('utf-8'))
                 login_user(user)
+                users.append(user)
                 return redirect(url_for('profile'))
 
-        return render_template('login.html', form=form,  error=error)
+    return render_template('login.html', form=form,  error=error)
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
