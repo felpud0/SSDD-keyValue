@@ -68,7 +68,8 @@ def signup():
     name = form.name.data.encode('utf-8')
     email = form.email.data.encode('utf-8')
     passw = form.password.data.encode('utf-8')
-    user = User(2, name , email, passw)
+    
+    sendSignUp(email, name, passw)
 
     return "Registrado " + str(user.name) + " " + str(user.email)
 def flash_errors(form):
@@ -107,6 +108,9 @@ def sendLogin(email, password):
     if respuesta.status_code == 200:
         return True
     return False
+
+def sendSignUp(email, name, password):
+    pass
 
 def getUserInfo(email):
     respuesta = requests.get('http://backend-rest:8080/Service/u/'+email)
