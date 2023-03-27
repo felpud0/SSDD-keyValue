@@ -38,7 +38,11 @@ def login():
                 error = 'Invalid Credentials. Please try again.'
 
             else:
-                user = User(1, 'name', form.email.data.encode('utf-8'), form.password.data.encode('utf-8'))
+                userInfo = getUserInfo(form.email.data)
+                user = User(1, 
+                            userInfo['name'], 
+                            userInfo['email'], 
+                            userInfo['password'].encode('utf-8'))
                 login_user(user)
                 users.append(user)
                 return redirect(url_for('profile'))
@@ -99,6 +103,12 @@ def sendLogin(email, password):
     if respuesta.status_code == 200:
         return True
     return False
+
+def getUserInfo(email):
+    respuesta = requests.get('http://backend-rest:8080/Service/u/'+email)
+    if respuesta.status_code == 200:
+        return respuesta.json()
+    return None
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
