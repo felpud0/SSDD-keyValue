@@ -13,6 +13,12 @@ make;
 docker-compse -f docker-compose-devel.yml up;
 ````
 
+Para ejecutar cuando se han realizado cambios en el código, ejecuta en la carpeta proyecto: 
+````
+make;
+docker-compse -f docker-compose-devel.yml up --build;
+````
+
 # Prueba
 Probar poniendo en la terminal
 `````
