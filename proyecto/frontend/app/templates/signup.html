@@ -7,7 +7,7 @@
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 <div class="notification is-danger">
-                    {{ messages[0] }}<br> Go to <a href="{{ url_for('auth.login') }}">login page</a>.
+                    {{ messages[0] }}<br> Go to <a href="{{ url_for('login') }}">login page</a>.
                 </div>
             {% endif %}
         {% endwith %}
@@ -33,6 +33,9 @@
 
             <button class="button is-block is-info is-large is-fullwidth" type="submit"> Sign Up</button>
         </form>
+    {% if error %}
+    <p class="error"><strong>Error:</strong> {{ error }}</p>
+    {% endif %}
     </div>
 </div>
 {% endblock %}

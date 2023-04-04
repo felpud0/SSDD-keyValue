@@ -99,4 +99,24 @@ public class AppLogicImpl
 
         return Optional.empty();
     }
+    
+    public Optional<User> register(String email, String name, String passwd) {
+    	
+        Optional<User> u = dao.getUserByEmail(email);
+        
+        if (u.isPresent())
+        {
+            System.out.println("ESTÁ "+email);
+            return Optional.empty();
+        }else {
+        	dao.addUsr(email, name, passwd);
+        	System.out.println("NO ESTÁ "+email);
+    		return u;
+        }
+    	
+    	
+    }
+    
+    
+    
 }

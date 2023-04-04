@@ -84,4 +84,10 @@ public class SQLUserDAO implements IUserDAO
         }
     }
 
+	@Override
+	public Optional<User> addUsr(String email, String name, String passwd) {
+		// TODO Auto-generated method stub
+		return Optional.empty();
+	}
+
 }

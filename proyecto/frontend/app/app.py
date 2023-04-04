@@ -56,22 +56,47 @@ def login():
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
 
-    if request.method == 'GET':
-        return render_template('signup.html')
-    
     error = None
     form = SignUpForm(request.form)
-    if not form.validate_on_submit():
-        error = 'Invalid Credentials. Please try again.'
-        
-    # TODO 1: Añadir el usuario a la BD? 
-    name = form.name.data.encode('utf-8')
-    email = form.email.data.encode('utf-8')
-    passw = form.password.data.encode('utf-8')
+    if request.method == 'GET':
+        return render_template('signup.html', form=form, error=error)
     
-    sendSignUp(email, name, passw)
+    
+    
+    # TODO 1: Añadir el usuario a la BD? 
+    name = form.name.data
+    email = form.email.data
+    passw = form.password.data
+    
+    
+    # Tratar error
+    if not sendSignUp(email, name, passw):
+        return redirect('profile')
 
-    return "Registrado " + str(user.name) + " " + str(user.email)
+    ###if name == "":
+        #error = 'Name can not be empty.'
+        #return render_template('signup.html', form=form, error=error)
+    #elif email == "":
+     #   error = 'Email can not be empty.'
+      #  return render_template('signup.html', form=form, error=error)
+    #elif passw == "":
+     #   error = 'Password can not be empty.'
+    #    return render_template('signup.html', form=form, error=error)
+    
+
+    #sendSignUp(email, name, passw)
+    user = User(2, 
+                name, 
+                email, 
+                passw.encode('utf-8'))
+    
+  #  login_user(user)
+    users.append(user)
+    form = LoginForm(None if request.method != 'POST' else request.form)
+    return render_template('login.html', form=form, error=None)
+#"Registrado " + str(name) + " " + str(email)
+
+
 def flash_errors(form):
     """Flashes form errors"""
     for field, errors in form.errors.items():
@@ -110,7 +135,12 @@ def sendLogin(email, password):
     return False
 
 def sendSignUp(email, name, password):
-    pass
+    registro = {'email':email, 'name':name, 'password':password}
+    respuesta = requests.post('http://backend-rest:8080/Service/registerUsr', json=registro)
+    flash(respuesta.status_code)
+    if respuesta.status_code == 200:
+        return True
+    return False
 
 def getUserInfo(email):
     respuesta = requests.get('http://backend-rest:8080/Service/u/'+email)
