@@ -56,12 +56,8 @@ def login():
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
 
-    error = None
-    form = SignUpForm(request.form)
     if request.method == 'GET':
-        return render_template('signup.html', form=form, error=error)
-    
-    
+        return render_template('signup.html')
     
     # TODO 1: Añadir el usuario a la BD? 
     name = form.name.data
