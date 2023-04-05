@@ -34,7 +34,8 @@ def login():
     error = None
     form = LoginForm(None if request.method != 'POST' else request.form)
 
-    if not(request.method == "POST" and form.validate()):
+    if not(request.method == "POST"):
+        error = 'Mala mia, algo ha fallado'
         return render_template('login.html', form=form,  error=error)
     
     if not sendLogin(form.email.data, form.password.data):
@@ -60,37 +61,19 @@ def signup():
         return render_template('signup.html')
     
     # TODO 1: Añadir el usuario a la BD? 
+    form = SignUpForm(request.form)
+    error = None
     name = form.name.data
     email = form.email.data
     passw = form.password.data
     
-    
     # Tratar error
     if not sendSignUp(email, name, passw):
-        return redirect('profile')
+        error = "Error al registrarse"
+        return render_template('signup.html', form=form, error=error)
 
-    ###if name == "":
-        #error = 'Name can not be empty.'
-        #return render_template('signup.html', form=form, error=error)
-    #elif email == "":
-     #   error = 'Email can not be empty.'
-      #  return render_template('signup.html', form=form, error=error)
-    #elif passw == "":
-     #   error = 'Password can not be empty.'
-    #    return render_template('signup.html', form=form, error=error)
-    
-
-    #sendSignUp(email, name, passw)
-    user = User(2, 
-                name, 
-                email, 
-                passw.encode('utf-8'))
-    
-  #  login_user(user)
-    users.append(user)
-    form = LoginForm(None if request.method != 'POST' else request.form)
-    return render_template('login.html', form=form, error=None)
-#"Registrado " + str(name) + " " + str(email)
+    print ("Registrado " + str(name) + " " + str(email))
+    return redirect(url_for('login'))
 
 
 def flash_errors(form):
@@ -132,7 +115,10 @@ def sendLogin(email, password):
 
 def sendSignUp(email, name, password):
     registro = {'email':email, 'name':name, 'password':password}
+    # Debug
+    app.logger.info("Sending register : " + str(registro))
     respuesta = requests.post('http://backend-rest:8080/Service/registerUsr', json=registro)
+    app.logger.info("Response : " + str(respuesta.status_code))
     flash(respuesta.status_code)
     if respuesta.status_code == 200:
         return True
