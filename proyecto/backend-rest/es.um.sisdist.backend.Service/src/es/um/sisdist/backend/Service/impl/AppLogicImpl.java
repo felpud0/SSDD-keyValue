@@ -15,6 +15,8 @@ import es.um.sisdist.backend.dao.models.utils.UserUtils;
 import es.um.sisdist.backend.dao.user.IUserDAO;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * @author dsevilla
@@ -52,6 +54,9 @@ public class AppLogicImpl
                 // to avoid needing certificates.
                 .usePlaintext().build();
         blockingStub = GrpcServiceGrpc.newBlockingStub(channel);
+    	dao.deleteUsr("peso@peso.com");
+    	//dao.deleteUsr("dsevilla@um.es");
+
         //asyncStub = GrpcServiceGrpc.newStub(channel);
     }
 
@@ -103,15 +108,16 @@ public class AppLogicImpl
     public Optional<User> register(String email, String name, String passwd) {
     	
         Optional<User> u = dao.getUserByEmail(email);
-        
+                
         if (u.isPresent())
         {
             System.out.println("ESTÁ "+email);
             return Optional.empty();
         }else {
-        	dao.addUsr(email, name, passwd);
+        	Optional<User> u2 = dao.addUsr(email, name, passwd);
+          	System.out.println(u2);
         	System.out.println("NO ESTÁ "+email);
-    		return u;
+    		return u2;
         }
     	
     	

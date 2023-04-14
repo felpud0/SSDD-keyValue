@@ -54,25 +54,52 @@ def login():
     return redirect(url_for('profile'))
 
 
+###@app.route('/signup', methods=['GET', 'POST'])
+###def signup():
+
+    ###if request.method == 'GET':
+       ### return render_template('signup.html')
+    
+    ###form = SignUpForm(request.form)
+    ##error = None
+   ### name = form.name.data
+###    email = form.email.data
+    ###passw = form.password.data
+    
+    # Tratar error
+###    if not sendSignUp(email, name, passw):
+###        error = "Error al registrarse"
+###        return render_template('signup.html', form=form, error=error)
+
+###    print ("Registrado " + str(name) + " " + str(email))
+###    return redirect(url_for('login'))
+
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-
     if request.method == 'GET':
         return render_template('signup.html')
     
-    # TODO 1: Añadir el usuario a la BD? 
     form = SignUpForm(request.form)
-    error = None
+
+    # Verificar formulario
+    #if not form.validate():
+    #    error = "Error al registrarse no form"
+    #    app.logger.info(error)
+    #    return render_template('signup.html', form=form, error=error)
+
+    # Enviar solicitud al backend
     name = form.name.data
     email = form.email.data
     passw = form.password.data
-    
-    # Tratar error
+
     if not sendSignUp(email, name, passw):
-        error = "Error al registrarse"
+        error = "Error al registrarse no signup"
+        app.logger.info(error)
+        flash(error)
         return render_template('signup.html', form=form, error=error)
 
-    print ("Registrado " + str(name) + " " + str(email))
+    # Mostrar mensaje de éxito
+    flash("¡Te has registrado con éxito!")
     return redirect(url_for('login'))
 
 
@@ -113,16 +140,37 @@ def sendLogin(email, password):
         return True
     return False
 
-def sendSignUp(email, name, password):
-    registro = {'email':email, 'name':name, 'password':password}
+###def sendSignUp(email, name, password):
+###    registro = {'email':email, 'name':name, 'password':password}
     # Debug
-    app.logger.info("Sending register : " + str(registro))
-    respuesta = requests.post('http://backend-rest:8080/Service/registerUsr', json=registro)
-    app.logger.info("Response : " + str(respuesta.status_code))
-    flash(respuesta.status_code)
-    if respuesta.status_code == 200:
+###    app.logger.info("Sending register : " + str(registro))
+###    respuesta = requests.post('http://backend-rest:8080/Service/registerUsr', json=registro)
+###    app.logger.info("Response : " + str(respuesta.status_code))
+###    flash(respuesta.status_code)
+###    if respuesta.status_code == 200:
+###  respuesta = ""
+###     return True
+###    return False
+###
+def sendSignUp(email, name, password):
+   
+    # Enviar solicitud al backend
+    registro = {'email': email, 'name': name, 'password': password}
+    try:
+        respuesta = requests.post('http://backend-rest:8080/Service/registerUsr', json=registro)
+    except requests.exceptions.RequestException as e:
+        # Manejo de errores
+        app.logger.error("Error sending registration request: " + str(e))
+        return False
+
+    # Manejo de respuestas del backend
+    if respuesta.status_code == 201:
         return True
+    else:
+        # Otro error
+        flash("Error al registrarse")
     return False
+
 
 def getUserInfo(email):
     respuesta = requests.get('http://backend-rest:8080/Service/u/'+email)

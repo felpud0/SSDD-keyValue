@@ -11,4 +11,7 @@ public interface IUserDAO
     public Optional<User> getUserByEmail(String id);
     
     public Optional<User> addUsr(String email, String name, String passwd);
+    
+    public boolean deleteUsr(String email);
+    
 }

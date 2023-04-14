@@ -3,11 +3,18 @@
  */
 package es.um.sisdist.backend.dao.models;
 
+import org.bson.BsonType;
+import org.bson.codecs.pojo.annotations.BsonId;
+import org.bson.codecs.pojo.annotations.BsonRepresentation;
+
 import es.um.sisdist.backend.dao.models.utils.UserUtils;
 
 public class User
 {
+	@BsonId // Esto indica que Mongo nos va a generar el ID
+	@BsonRepresentation(BsonType.OBJECT_ID) // Nos ayuda a tratarlo como String, aunque en realidad es un ObjectID
     private String uid;
+	
     private String email;
     private String password_hash;
     private String name;

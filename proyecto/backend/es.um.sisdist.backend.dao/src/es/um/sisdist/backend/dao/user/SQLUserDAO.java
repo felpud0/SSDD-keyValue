@@ -90,4 +90,10 @@ public class SQLUserDAO implements IUserDAO
 		return Optional.empty();
 	}
 
+	@Override
+	public boolean deleteUsr(String email) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

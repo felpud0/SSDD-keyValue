@@ -8,18 +8,23 @@ import static com.mongodb.client.model.Filters.eq;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 
 import org.bson.Document;
 
@@ -50,16 +55,10 @@ public class MongoUserDAO implements IUserDAO
         		.withCodecRegistry(pojoCodecRegistry);
         collection = database.getCollection("users", User.class);
         
-        
-        /*
-        Para ver qué usuarios hay en la bbdd
-        
-        FindIterable<User> cursor = collection.find();
-
-        System.out.println("ELEMENTOS BBDD:");
-        for (User doc : cursor) 
-            System.out.println(doc);
-        */
+        //collection.deleteMany(new Document());
+       
+        imprimir();
+                
         
     }
 
@@ -84,12 +83,64 @@ public class MongoUserDAO implements IUserDAO
 		u.setEmail(email);
 		u.setName(name);
 		u.setPassword_hash(UserUtils.md5pass(passwd));
+		u.setVisits(0);
 		
-		collection.insertOne(u);
+		//u.setUid(new ObjectId().toString());
 		
-		return Optional.of(u);
+		LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter isoFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        String formattedDate = now.format(isoFormatter);
+		u.setToken(UserUtils.md5pass("/register"+formattedDate+email));
+
+		System.out.println("EL USUARIO JUSTO ANTES DE METER A LA BBDD: "+u);		
+
+		try {
+			collection.insertOne(u);
+			System.out.println("EL USUARIO QUE QUIERO AÑADIR: "+u);
+			imprimir();
+			return Optional.of(u);
+		}catch (Exception e) {
+			System.out.println("AQUÍ PETO");
+			System.out.println(e);
+			imprimir();
+			return Optional.empty();
+		}
+
+		
+		
+		
+		
+		
 	}
     
+	@Override
+	public boolean deleteUsr(String email) {
+				
+	    if (collection.countDocuments(eq("email", email)) != 0) { // Comprobamos si existe ya un mail con esto
+	    	collection.deleteOne(eq("email", email)); // Lo eliminamos
+	    	
+	    	
+	       /* FindIterable<User> cursor = collection.find();
+
+	    	System.out.println("ELEMENTOS BBDD:");
+	        for (User doc : cursor) 
+	            System.out.println(doc);*/
+	    	
+	    	return true;
+	    }
+	    
+	    return false;
+
+
+	}
     
+    //Para ver qué usuarios hay en la bbdd
+	private void imprimir() {
+		FindIterable<User> cursor = collection.find();
+
+    	System.out.println("ELEMENTOS BBDD:");
+        for (User doc : cursor) 
+            System.out.println(doc);
+	}
 
 }
