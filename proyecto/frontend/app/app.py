@@ -88,7 +88,8 @@ def flash_errors(form):
 @app.route('/profile')
 @login_required
 def profile():
-    return render_template('profile.html')
+    respuesta = getUserInfo(current_user.email)
+    return render_template('profile.html', user=respuesta)
 
 @app.route('/logout')
 @login_required
