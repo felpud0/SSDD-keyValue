@@ -54,9 +54,11 @@ public class AppLogicImpl
                 // to avoid needing certificates.
                 .usePlaintext().build();
         blockingStub = GrpcServiceGrpc.newBlockingStub(channel);
-    	dao.deleteUsr("peso@peso.com");
+    	//dao.deleteUsr("peso@peso.com");
     	//dao.deleteUsr("dsevilla@um.es");
-
+        
+        dao.deleteUsr("w@w.com");
+        
         //asyncStub = GrpcServiceGrpc.newStub(channel);
     }
 
@@ -106,6 +108,9 @@ public class AppLogicImpl
     }
     
     public Optional<User> register(String email, String name, String passwd) {
+    	
+    	if (email.isEmpty() || name.isEmpty() || passwd.isEmpty())
+    		return Optional.empty();
     	
         Optional<User> u = dao.getUserByEmail(email);
                 

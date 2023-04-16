@@ -10,6 +10,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import org.bson.codecs.configuration.CodecProvider;
@@ -38,6 +39,7 @@ import es.um.sisdist.backend.dao.models.utils.UserUtils;
 public class MongoUserDAO implements IUserDAO
 {
     private MongoCollection<User> collection;
+    private MongoClient mongoClient;
 
     public MongoUserDAO()
     {
@@ -49,7 +51,7 @@ public class MongoUserDAO implements IUserDAO
         		+ Optional.ofNullable(System.getenv("MONGO_SERVER")).orElse("localhost")
                 + ":27017/ssdd?authSource=admin";
 
-        MongoClient mongoClient = MongoClients.create(uri);
+        mongoClient = MongoClients.create(uri);
         MongoDatabase database = mongoClient
         		.getDatabase(Optional.ofNullable(System.getenv("DB_NAME")).orElse("ssdd"))
         		.withCodecRegistry(pojoCodecRegistry);
@@ -78,7 +80,8 @@ public class MongoUserDAO implements IUserDAO
 
 	@Override
 	public Optional<User> addUsr(String email, String name, String passwd) {
-		
+		//collection.drop();
+
 		User u = new User();
 		u.setEmail(email);
 		u.setName(name);
@@ -92,6 +95,8 @@ public class MongoUserDAO implements IUserDAO
         String formattedDate = now.format(isoFormatter);
 		u.setToken(UserUtils.md5pass("/register"+formattedDate+email));
 
+		//u.setUid(new ObjectId().toString());
+		
 		System.out.println("EL USUARIO JUSTO ANTES DE METER A LA BBDD: "+u);		
 
 		try {
@@ -100,6 +105,23 @@ public class MongoUserDAO implements IUserDAO
 			imprimir();
 			return Optional.of(u);
 		}catch (Exception e) {
+			
+			/*System.out.println("MIRA LOS ÍNDICES JUSTO ANTES:");
+			for (Document d : collection.listIndexes()) {
+				System.out.println(d);
+			}
+			//collection.dropIndex("uid");
+		//	collection.dropIndex("email");
+			//collection.dropIndex("id");
+			collection.drop();
+			
+
+			
+			System.out.println("MIRA LOS ÍNDICES JUSTO DESPUÉS:");
+			for (Document d : collection.listIndexes()) {
+				System.out.println(d);
+			}
+			*/
 			System.out.println("AQUÍ PETO");
 			System.out.println(e);
 			imprimir();

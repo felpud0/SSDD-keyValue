@@ -125,9 +125,9 @@ public class User
         this.uid = UserUtils.md5pass(email);
     }
 
-    public User(String id, String email, String password_hash, String name, String tOKEN, int visits)
+    public User(String uid, String email, String password_hash, String name, String tOKEN, int visits)
     {
-        this.uid = id;
+        this.uid = uid;
         this.email = email;
         this.password_hash = password_hash;
         this.name = name;

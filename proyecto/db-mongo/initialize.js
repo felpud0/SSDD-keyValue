@@ -8,7 +8,7 @@ db.users.createIndex(
 
 db.users.createIndex(
 	{
-		"id": 1
+		"uid": 1
 	},
 	{
 		unique: true
