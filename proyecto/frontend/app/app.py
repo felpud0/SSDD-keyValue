@@ -91,6 +91,12 @@ def profile():
     respuesta = getUserInfo(current_user.email)
     return render_template('profile.html', user=respuesta)
 
+@app.route('/bbdd')
+@login_required
+def bbdd():
+    return render_template('bbdd.html')
+
+
 @app.route('/logout')
 @login_required
 def logout():
