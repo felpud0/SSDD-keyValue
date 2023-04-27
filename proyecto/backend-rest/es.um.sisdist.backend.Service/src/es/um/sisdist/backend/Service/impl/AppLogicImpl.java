@@ -13,8 +13,10 @@ import com.mysql.cj.x.protobuf.MysqlxDatatypes.Array;
 import es.um.sisdist.backend.grpc.GrpcServiceGrpc;
 import es.um.sisdist.backend.grpc.PingRequest;
 import es.um.sisdist.models.D;
+import es.um.sisdist.models.DBDTO;
 import es.um.sisdist.backend.dao.DAOFactoryImpl;
 import es.um.sisdist.backend.dao.IDAOFactory;
+import es.um.sisdist.backend.dao.models.DB;
 import es.um.sisdist.backend.dao.models.User;
 import es.um.sisdist.backend.dao.models.utils.UserUtils;
 import es.um.sisdist.backend.dao.user.IUserDAO;
@@ -133,9 +135,13 @@ public class AppLogicImpl
     	
     }
 
-    public String addDB(String username, String name, List<D> db){
-        return "ole";
-    }
+	public Optional<DB> addDB(String email, DB db) {
+		User dbOwner = getUserByEmail(email).get();
+		dbOwner.addDB(db);
+		dao.updateUsr(dbOwner);
+		return Optional.of(db);
+	}
+
     
     
 }

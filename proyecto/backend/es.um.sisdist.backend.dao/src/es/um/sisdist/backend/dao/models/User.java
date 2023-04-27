@@ -3,6 +3,10 @@
  */
 package es.um.sisdist.backend.dao.models;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bson.BsonType;
 import org.bson.codecs.pojo.annotations.BsonId;
 import org.bson.codecs.pojo.annotations.BsonRepresentation;
@@ -22,6 +26,8 @@ public class User
     private String token;
 
     private int visits;
+
+    private Map<String, DB> dbs;
 
     /**
      * @return the id
@@ -119,6 +125,16 @@ public class User
         this.visits = visits;
     }
 
+    public Map<String, DB> getDbs()
+    {
+        return Collections.unmodifiableMap(dbs);
+    }
+
+    public void addDB(DB db)
+    {
+        dbs.put(db.getDbname(), db);
+    }
+
     public User(String email, String password_hash, String name, String tOKEN, int visits)
     {
         this(email, email, password_hash, name, tOKEN, visits);
@@ -133,6 +149,7 @@ public class User
         this.name = name;
         token = tOKEN;
         this.visits = visits;
+        this.dbs = new HashMap<>();
     }
 
     @Override

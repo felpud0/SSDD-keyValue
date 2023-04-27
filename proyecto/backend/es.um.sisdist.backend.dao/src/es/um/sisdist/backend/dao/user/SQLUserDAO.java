@@ -96,4 +96,10 @@ public class SQLUserDAO implements IUserDAO
 		return false;
 	}
 
+    @Override
+    public boolean updateUsr(User u) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'updateUsr'");
+    }
+
 }

@@ -166,14 +166,9 @@ public class MongoUserDAO implements IUserDAO
 	}
 
 	@Override
-	public boolean updateUsr(String email) {
-		Optional<User> user = getUserByEmail(email);
-		if (!user.isPresent()) {
-			return false;
-		}
-		User u = user.get();
+	public boolean updateUsr(User u) {
 		//Update in mongo
-		collection.findOneAndReplace(eq("email", email), u);
+		collection.findOneAndReplace(eq("email", u.getEmail()), u);
 		return true;
 	}
 

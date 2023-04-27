@@ -16,6 +16,6 @@ public interface IUserDAO
     
     public boolean deleteUsr(String email);
 
-    public boolean updateUsr(String email);    
+    public boolean updateUsr(User u);    
     
 }

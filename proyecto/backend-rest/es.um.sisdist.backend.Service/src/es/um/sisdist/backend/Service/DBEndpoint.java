@@ -5,6 +5,7 @@ import java.util.Map;
 import es.um.sisdist.backend.Service.impl.AppLogicImpl;
 import es.um.sisdist.backend.dao.models.User;
 import es.um.sisdist.models.DBDTO;
+import es.um.sisdist.models.DBDTOUtils;
 import es.um.sisdist.models.UserDTO;
 import es.um.sisdist.models.UserDTOUtils;
 import jakarta.ws.rs.Consumes;
@@ -23,8 +24,8 @@ public class DBEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createDB(@PathParam("username") String username, DBDTO keyValues) {
         System.out.println(keyValues.toString());
-        // Return a URI that appends to the current path
-        URI uri = URI.create("/u/" + username + "/db/");
+        AppLogicImpl.getInstance().addDB(username, DBDTOUtils.fromDTO(keyValues));
+        URI uri = URI.create("/u/" + username + "/db/"+keyValues.getDbname());
         return Response.created(uri).entity(keyValues).build();
     }
 
