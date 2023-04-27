@@ -3,11 +3,16 @@
  */
 package es.um.sisdist.backend.Service.impl;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
 
+import com.mysql.cj.x.protobuf.MysqlxDatatypes.Array;
+
 import es.um.sisdist.backend.grpc.GrpcServiceGrpc;
 import es.um.sisdist.backend.grpc.PingRequest;
+import es.um.sisdist.models.D;
 import es.um.sisdist.backend.dao.DAOFactoryImpl;
 import es.um.sisdist.backend.dao.IDAOFactory;
 import es.um.sisdist.backend.dao.models.User;
@@ -20,7 +25,7 @@ import jakarta.ws.rs.core.Response.Status;
 
 /**
  * @author dsevilla
- *
+ * 
  */
 public class AppLogicImpl
 {
@@ -127,7 +132,10 @@ public class AppLogicImpl
     	
     	
     }
-    
+
+    public String addDB(String username, String name, List<D> db){
+        return "ole";
+    }
     
     
 }
