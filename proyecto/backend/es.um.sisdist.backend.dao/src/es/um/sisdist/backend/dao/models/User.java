@@ -130,18 +130,22 @@ public class User
         return Collections.unmodifiableMap(dbs);
     }
 
+    public void setDbs(Map<String, DB> dbs) {
+        this.dbs = dbs;
+    }
+
     public void addDB(DB db)
     {
         dbs.put(db.getDbname(), db);
     }
 
-    public User(String email, String password_hash, String name, String tOKEN, int visits)
+    public DB getDB(String dbname)
     {
-        this(email, email, password_hash, name, tOKEN, visits);
-        this.uid = UserUtils.md5pass(email);
+        return dbs.get(dbname);
     }
 
-    public User(String uid, String email, String password_hash, String name, String tOKEN, int visits)
+
+    public User(String uid, String email, String password_hash, String name, String tOKEN, int visits, Map<String, DB> dbs)
     {
         this.uid = uid;
         this.email = email;
@@ -149,14 +153,14 @@ public class User
         this.name = name;
         token = tOKEN;
         this.visits = visits;
-        this.dbs = new HashMap<>();
+        this.dbs = dbs;
     }
 
     @Override
     public String toString()
     {
         return "User [uid=" + uid + ", email=" + email + ", password_hash=" + password_hash + ", name=" + name
-                + ", TOKEN=" + token + ", visits=" + visits + "]";
+                + ", TOKEN=" + token + ", visits=" + visits + ", dbs=" + dbs + "]";
     }
 
     public User()
