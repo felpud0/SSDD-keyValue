@@ -1,5 +1,7 @@
 package es.um.sisdist.models;
 
+import java.util.Map;
+
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
@@ -13,6 +15,8 @@ public class UserDTO
     private String token;
 
     private int visits;
+
+    private Map<String, DBDTO> dbs;
 
     /**
      * @return the id
@@ -110,7 +114,17 @@ public class UserDTO
         this.visits = visits;
     }
 
-    public UserDTO(String id, String email, String password, String name, String tOKEN, int visits)
+    public Map<String, DBDTO> getDbs()
+    {
+        return dbs;
+    }
+
+    public void setDbs(Map<String, DBDTO> dbs)
+    {
+        this.dbs = dbs;
+    }
+
+    public UserDTO(String id, String email, String password, String name, String tOKEN, int visits, Map<String, DBDTO> dbs)
     {
         super();
         this.id = id;
@@ -119,6 +133,7 @@ public class UserDTO
         this.name = name;
         token = tOKEN;
         this.visits = visits;
+        this.dbs = dbs;
     }
 
     public UserDTO()

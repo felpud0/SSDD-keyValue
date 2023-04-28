@@ -14,6 +14,9 @@ import es.um.sisdist.backend.grpc.GrpcServiceGrpc;
 import es.um.sisdist.backend.grpc.PingRequest;
 import es.um.sisdist.models.D;
 import es.um.sisdist.models.DBDTO;
+import es.um.sisdist.models.DBDTOUtils;
+import es.um.sisdist.models.UserDTO;
+import es.um.sisdist.models.UserDTOUtils;
 import es.um.sisdist.backend.dao.DAOFactoryImpl;
 import es.um.sisdist.backend.dao.IDAOFactory;
 import es.um.sisdist.backend.dao.models.DB;
@@ -61,12 +64,7 @@ public class AppLogicImpl
                 // to avoid needing certificates.
                 .usePlaintext().build();
         blockingStub = GrpcServiceGrpc.newBlockingStub(channel);
-    	//dao.deleteUsr("peso@peso.com");
-    	//dao.deleteUsr("dsevilla@um.es");
-        
-        dao.deleteUsr("w@w.com");
-        
-        //asyncStub = GrpcServiceGrpc.newStub(channel);
+
     }
 
     public static AppLogicImpl getInstance()
@@ -114,33 +112,33 @@ public class AppLogicImpl
         return Optional.empty();
     }
     
-    public Optional<User> register(String email, String name, String passwd) {
-    	
-    	if (email.isEmpty() || name.isEmpty() || passwd.isEmpty())
-    		return Optional.empty();
-    	
-        Optional<User> u = dao.getUserByEmail(email);
-                
-        if (u.isPresent())
-        {
-            System.out.println("ESTÁ "+email);
-            return Optional.empty();
-        }else {
-        	Optional<User> u2 = dao.addUsr(email, name, passwd);
-          	System.out.println(u2);
-        	System.out.println("NO ESTÁ "+email);
-    		return u2;
-        }
-    	
-    	
-    }
+    public User register(UserDTO userDTO) {
 
-	public Optional<DB> addDB(String email, DB db) {
+        User registered = UserDTOUtils.fromDTO(userDTO);
+        dao.addUsr(registered);
+        return registered;
+    }
+    
+
+	public Optional<DB> addDB(String email, DBDTO dbdto) {
 		User dbOwner = getUserByEmail(email).get();
+        DB db = DBDTOUtils.fromDTO(dbdto);
 		dbOwner.addDB(db);
 		dao.updateUsr(dbOwner);
 		return Optional.of(db);
 	}
+
+    public Optional<DB> getDB(String email, String dbName) {
+        Optional<User> dbOwner = getUserByEmail(email);
+        if  (dbOwner.isEmpty()) {
+            System.out.println("No existe el usuario");
+            return Optional.empty();
+        }
+        
+        DB db = dbOwner.get().getDB(dbName);
+        System.out.println(db);
+        return Optional.of(db);
+    }
 
     
     
