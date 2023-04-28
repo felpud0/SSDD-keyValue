@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 import es.um.sisdist.backend.dao.models.User;
@@ -44,62 +45,41 @@ public class SQLUserDAO implements IUserDAO
     }
 
     @Override
-    public Optional<User> getUserById(String id)
-    {
+    public Optional<User> getUserById(String id) {
         // TODO Auto-generated method stub
-        return null;
+        throw new UnsupportedOperationException("Unimplemented method 'getUserById'");
     }
 
     @Override
-    public Optional<User> getUserByEmail(String id)
-    {
-        PreparedStatement stm;
-        try
-        {
-            stm = conn.prepareStatement("SELECT * from users WHERE email = ?");
-            stm.setString(1, id);
-            ResultSet result = stm.executeQuery();
-            if (result.next())
-                return createUser(result);
-        } catch (SQLException e)
-        {
-            // Fallthrough
-        }
-        return Optional.empty();
+    public Optional<User> getUserByEmail(String id) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getUserByEmail'");
     }
-
-    private Optional<User> createUser(ResultSet result)
-    {
-        try
-        {
-            return Optional.of(new User(result.getString(1), // id
-                    result.getString(2), // email
-                    result.getString(3), // pwhash
-                    result.getString(4), // name
-                    result.getString(5), // token
-                    result.getInt(6))); // visits
-        } catch (SQLException e)
-        {
-            return Optional.empty();
-        }
-    }
-
-	@Override
-	public Optional<User> addUsr(String email, String name, String passwd) {
-		// TODO Auto-generated method stub
-		return Optional.empty();
-	}
-
-	@Override
-	public boolean deleteUsr(String email) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
     @Override
-    public boolean updateUsr(User u) {
+    public void addUsr(User u) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'addUsr'");
+    }
+
+    @Override
+    public void deleteUsr(User u) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'deleteUsr'");
+    }
+
+    @Override
+    public void updateUsr(User u) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'updateUsr'");
     }
+
+    @Override
+    public List<User> getAllUsers() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAllUsers'");
+    }
+
+
 
 }

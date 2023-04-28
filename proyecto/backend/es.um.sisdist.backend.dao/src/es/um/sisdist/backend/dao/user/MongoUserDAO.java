@@ -11,6 +11,8 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 import org.bson.codecs.configuration.CodecProvider;
@@ -79,81 +81,27 @@ public class MongoUserDAO implements IUserDAO
     }
 
 	@Override
-	public Optional<User> addUsr(String email, String name, String passwd) {
-		//collection.drop();
+	public void addUsr(User u) {
 
-		User u = new User();
-		u.setEmail(email);
-		u.setName(name);
-		u.setPassword_hash(UserUtils.md5pass(passwd));
-		u.setVisits(0);
-		
-		//u.setUid(new ObjectId().toString());
-		
-		LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter isoFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-        String formattedDate = now.format(isoFormatter);
-		u.setToken(UserUtils.md5pass("/register"+formattedDate+email));
-
-		//u.setUid(new ObjectId().toString());
-		
 		System.out.println("EL USUARIO JUSTO ANTES DE METER A LA BBDD: "+u);		
 
 		try {
 			collection.insertOne(u);
 			System.out.println("EL USUARIO QUE QUIERO AÑADIR: "+u);
 			imprimir();
-			return Optional.of(u);
 		}catch (Exception e) {
 			
-			/*System.out.println("MIRA LOS ÍNDICES JUSTO ANTES:");
-			for (Document d : collection.listIndexes()) {
-				System.out.println(d);
-			}
-			//collection.dropIndex("uid");
-		//	collection.dropIndex("email");
-			//collection.dropIndex("id");
-			collection.drop();
-			
-
-			
-			System.out.println("MIRA LOS ÍNDICES JUSTO DESPUÉS:");
-			for (Document d : collection.listIndexes()) {
-				System.out.println(d);
-			}
-			*/
 			System.out.println("AQUÍ PETO");
 			System.out.println(e);
 			imprimir();
-			return Optional.empty();
 		}
 
-		
-		
-		
-		
-		
 	}
     
 	@Override
-	public boolean deleteUsr(String email) {
-				
-	    if (collection.countDocuments(eq("email", email)) != 0) { // Comprobamos si existe ya un mail con esto
-	    	collection.deleteOne(eq("email", email)); // Lo eliminamos
-	    	
-	    	
-	       /* FindIterable<User> cursor = collection.find();
-
-	    	System.out.println("ELEMENTOS BBDD:");
-	        for (User doc : cursor) 
-	            System.out.println(doc);*/
-	    	
-	    	return true;
-	    }
-	    
-	    return false;
-
-
+	public void deleteUsr(User u) {
+		String email = u.getEmail(); // Obtenemos el email del usuario que queremos eliminar
+	    collection.deleteOne(eq("email", email)); // Lo eliminamos
 	}
     
     //Para ver qué usuarios hay en la bbdd
@@ -166,10 +114,20 @@ public class MongoUserDAO implements IUserDAO
 	}
 
 	@Override
-	public boolean updateUsr(User u) {
+	public void updateUsr(User u) {
 		//Update in mongo
 		collection.findOneAndReplace(eq("email", u.getEmail()), u);
-		return true;
+	}
+
+	@Override
+	public List<User> getAllUsers() {
+		List<User> users = new ArrayList<User>();
+		FindIterable<User> cursor = collection.find();
+		
+		for (User doc : cursor) 
+			users.add(doc);
+		
+		return users;
 	}
 
 }

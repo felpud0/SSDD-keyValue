@@ -12,10 +12,12 @@ public interface IUserDAO
 
     public Optional<User> getUserByEmail(String id);
     
-    public Optional<User> addUsr(String email, String name, String passwd);
+    public void addUsr(User u);
     
-    public boolean deleteUsr(String email);
+    public void deleteUsr(User u);
 
-    public boolean updateUsr(User u);    
+    public void updateUsr(User u);    
+
+    public List<User> getAllUsers();
     
 }
