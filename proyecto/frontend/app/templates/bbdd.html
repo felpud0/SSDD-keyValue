@@ -3,24 +3,15 @@
 {% block content %}
 <h1>Bases de datos:</h1>
 <div>
+<form>
 {% for bbdd in bbdds %}
-  <br><a href="/bbdd/{{ bbdd['dbname'] }}">test</a> 
+ 
+    <a href="/bbdd/{{ bbdd['dbname'] }}">test</a> 
+    <button type="submit" name="id" value="{{ bbdd['dbname'] }}" formaction="/bbdd/ver"> Ver</button>
+    <button type="submit" name="id" value="{{ bbdd['dbname'] }}" formaction="/bbdd/eliminar"> Eliminar</button>
+    <button type="submit" name="id" value="{{ bbdd['dbname'] }}" formaction="/bbdd/modificar"> Modificar</button>
+
 {% endfor %}
 </div>
-<button type="button">
-  Listar BBDD
-</button>
-
-<button type="button">
-  Crear BBDD
-</button>
-
-<button type="button">
-  Borrar BBDD
-</button>
-
-<button type="button">
-  Modificar BBDD
-</button>
-
+</form>
 {% endblock %}

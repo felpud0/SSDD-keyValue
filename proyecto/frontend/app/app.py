@@ -98,10 +98,10 @@ def bbdd():
     bbdds = getUserInfo(current_user.email)['dbs']
     return render_template('bbdd.html', bbdds=bbdds)
 
-@app.route('/bbdd/<bbdd>')
+@app.route('/bbdd/ver')
 @login_required
-def bbddInfo(bbdd):
-    respuesta = getDBInfo(current_user.email, bbdd)
+def bbddInfo():
+    respuesta = getDBInfo(current_user.email, request.args.get('id'))
     return render_template('bbddInfo.html', bbdd=respuesta)
 
 
