@@ -41,10 +41,11 @@ public class UsersEndpoint
     }
 
     @GET
-    @Path("/")
+    //@Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUsers()
     {
+        System.out.println("GET USERS");
         return Response.ok(impl.getAllUsers()).build();
     }
 }

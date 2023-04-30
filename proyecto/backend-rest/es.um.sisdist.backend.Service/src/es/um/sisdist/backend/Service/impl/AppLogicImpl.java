@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.bson.types.ObjectId;
 
@@ -154,8 +155,9 @@ public class AppLogicImpl
         return null;
     }
 
-    public List<User> getAllUsers() {
-        return dao.getAllUsers();
+    public List<UserDTO> getAllUsers() {
+        List<User> users = dao.getAllUsers();
+        return users.stream().map(UserDTOUtils::toDTO).collect(Collectors.toList());
     }
 
     
