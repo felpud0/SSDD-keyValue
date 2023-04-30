@@ -1,15 +1,26 @@
+<style>
+    table, th, td {
+      border:1px solid black;
+    }
+</style>
 {% extends "base.html" %}
 
 {% block content %}
 <h1>Nombre: {{ bbdd['dbname'] }}</h1>
 <h3>Datos:</h3>
 <div>
+<table style="width:50%">
+    <tr>
+        <th>Clave</th>
+        <th>Valor</th>
+    </tr>
 {% for pair in bbdd['d'] %}
-<table>
     <tr>
         <td>{{ pair['k'] }}</td>
         <td>{{ pair['v'] }}</td>
     </tr>
-</table>
-  
 {% endfor %}
+</table>
+</div>
+
+{% endblock %}
