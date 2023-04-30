@@ -21,7 +21,7 @@ public class UserDTOUtils
     {
         System.out.println("UserDTOUtils.fromDTO: " + udto.toString());
         List<DB> dbs = new ArrayList<DB>(); 
-        //udto.getDbs().forEach((dbname, db) -> dbs.add("/"+dbname)));
+        udto.getDbs().forEach((dbname, db) -> dbs.add(DBDTOUtils.fromDTO(db)));
         return new User(udto.getId(),udto.getEmail(), udto.getPassword(), udto.getName(), udto.getToken(),
                 udto.getVisits(), dbs);
     }
@@ -29,8 +29,8 @@ public class UserDTOUtils
     public static UserDTO toDTO(User u)
     {
         System.out.println("UserDTOUtils.toDTO: " + u.toString());
-        List<String> dbs = new ArrayList<String>();
-        u.getDbs().forEach((db) -> dbs.add("/db/" + db.getDbname()));
+        Map<String, DBDTO> dbs = new HashMap<String, DBDTO>();
+        u.getDbs().forEach((db) -> dbs.put(db.getDbname(), DBDTOUtils.toDTO(db)));
         return new UserDTO(u.getUid(), u.getEmail(), "", // Password never is returned back
                 u.getName(), u.getToken(), u.getVisits(), dbs);
     }
