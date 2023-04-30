@@ -7,9 +7,9 @@
 {% for bbdd in bbdds %}
 <div>
     <b>{{ bbdd['dbname'] }}</b> 
-    <button type="submit" name="id" value="{{ bbdd['dbname'] }}" formaction="/bbdd/ver"> Ver</button>
-    <button type="submit" name="id" value="{{ bbdd['dbname'] }}" formaction="/bbdd/eliminar"> Eliminar</button>
-    <button type="submit" name="id" value="{{ bbdd['dbname'] }}" formaction="/bbdd/modificar"> Modificar</button>
+    <button type="submit" formaction="/bbdd/{{ bbdd['dbname'] }}"> Ver</button>
+    <button type="submit" formaction="/bbdd/{{ bbdd['dbname'] }}/eliminar"> Eliminar</button>
+    <button type="submit" formaction="/bbdd/{{ bbdd['dbname'] }}/modificar"> Modificar</button>
 </div>
 {% endfor %}
 </div>

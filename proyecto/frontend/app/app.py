@@ -98,16 +98,16 @@ def bbdd():
     bbdds = getUserInfo(current_user.email)['dbs']
     return render_template('bbdd.html', bbdds=bbdds)
 
-@app.route('/bbdd/ver')
+@app.route('/bbdd/<id>')
 @login_required
-def bbddInfo():
-    respuesta = getDBInfo(current_user.email, request.args.get('id'))
+def bbddInfo(id):
+    respuesta = getDBInfo(current_user.email,id)
     return render_template('bbddInfo.html', bbdd=respuesta)
 
-@app.route('/bbdd/eliminar')
+@app.route('/bbdd/<id>/eliminar')
 @login_required
-def bbddEliminar():
-    bdID = request.args.get('id')
+def bbddEliminar(id):
+    bdID = id
     respuesta = removeDB(current_user.email, bdID)
     if respuesta.status_code != 204:
         info = "Error al eliminar la base de datos <"+bdID+">"
