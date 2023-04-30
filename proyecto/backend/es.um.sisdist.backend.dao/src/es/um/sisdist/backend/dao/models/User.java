@@ -138,6 +138,11 @@ public class User
         return dbs.stream().filter(db -> db.getDbname().equals(dbName)).findFirst();
     }
 
+    public boolean deleteDB(String dbName)
+    {
+        return dbs.removeIf(db -> db.getDbname().equals(dbName));
+    }
+
     public void setDbs(ArrayList<DB> dbs) {
         this.dbs = dbs;
     }

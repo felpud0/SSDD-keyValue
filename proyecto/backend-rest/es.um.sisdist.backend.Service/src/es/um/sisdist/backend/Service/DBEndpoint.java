@@ -9,6 +9,7 @@ import es.um.sisdist.models.DBDTOUtils;
 import es.um.sisdist.models.UserDTO;
 import es.um.sisdist.models.UserDTOUtils;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -39,5 +40,17 @@ public class DBEndpoint {
         DBDTO db= DBDTOUtils.toDTO(AppLogicImpl.getInstance().getDB(username, dbname).get());
         return db;
     }
+
+    @DELETE
+    @Path("/{dbname}")
+    public Response deleteDB(@PathParam("username") String username, @PathParam("dbname") String dbname) {
+        System.out.println("DELETE DB: " + username + " " + dbname);
+        if (AppLogicImpl.getInstance().deleteDB(username, dbname) ){
+            return Response.noContent().build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
 
 }

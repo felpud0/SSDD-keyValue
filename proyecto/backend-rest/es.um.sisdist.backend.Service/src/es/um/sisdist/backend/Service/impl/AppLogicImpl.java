@@ -160,6 +160,18 @@ public class AppLogicImpl
         return users.stream().map(UserDTOUtils::toDTO).collect(Collectors.toList());
     }
 
+    public boolean deleteDB(String email, String dbName) {
+        Optional<User> dbOwner = getUserByEmail(email);
+        if  (dbOwner.isEmpty()) {
+            System.out.println("No existe el usuario");
+            return false;
+        }
+        
+        boolean isDeleted= dbOwner.get().deleteDB(dbName);
+        dao.updateUsr(dbOwner.get());
+        return isDeleted;
+    }
+
     
     
 }
