@@ -1,7 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-
+<h1>Bases de datos:</h1>
+<div>
+{% for bbdd in bbdds %}
+  <br><a href="{{ bbdd }}">test</a> 
+{% endfor %}
+</div>
 <button type="button">
   Listar BBDD
 </button>

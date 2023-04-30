@@ -95,7 +95,8 @@ def profile():
 @app.route('/bbdd')
 @login_required
 def bbdd():
-    return render_template('bbdd.html')
+    bbdds = getUserInfo(current_user.email)['dbs']
+    return render_template('bbdd.html', bbdds=bbdds)
 
 
 @app.route('/logout')
