@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.bson.BsonType;
 import org.bson.codecs.pojo.annotations.BsonId;
@@ -130,6 +131,11 @@ public class User
     public List<DB> getDbs()
     {
         return Collections.unmodifiableList(dbs);
+    }
+
+    public Optional<DB> getDB(String dbName)
+    {
+        return dbs.stream().filter(db -> db.getDbname().equals(dbName)).findFirst();
     }
 
     public void setDbs(ArrayList<DB> dbs) {

@@ -150,9 +150,9 @@ public class AppLogicImpl
             return Optional.empty();
         }
         
-        //DB db = dbOwner.get().getDB(dbName);
-        //System.out.println(db.toString());
-        return null;
+        Optional<DB> db = dbOwner.get().getDB(dbName);
+        System.out.println(db.toString());
+        return db;
     }
 
     public List<UserDTO> getAllUsers() {
