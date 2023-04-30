@@ -104,6 +104,18 @@ def bbddInfo():
     respuesta = getDBInfo(current_user.email, request.args.get('id'))
     return render_template('bbddInfo.html', bbdd=respuesta)
 
+@app.route('/bbdd/eliminar')
+@login_required
+def bbddEliminar():
+    bdID = request.args.get('id')
+    respuesta = removeDB(current_user.email, bdID)
+    if respuesta.status_code != 204:
+        info = "Error al eliminar la base de datos <"+bdID+">"
+    else:
+        info = "Base de datos <"+bdID+"> eliminada con éxito"
+    flash(info)
+    return redirect(url_for('bbdd'))
+
 
 @app.route('/logout')
 @login_required
@@ -160,6 +172,10 @@ def getDBInfo(email, db):
     if respuesta.status_code == 200:
         return respuesta.json()
     return None
+
+def removeDB(email, db):
+    respuesta = requests.delete('http://backend-rest:8080/Service/u/'+email+'/db/'+db)
+    return respuesta
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
