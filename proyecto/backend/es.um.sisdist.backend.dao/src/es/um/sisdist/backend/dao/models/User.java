@@ -3,8 +3,10 @@
  */
 package es.um.sisdist.backend.dao.models;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.bson.BsonType;
@@ -15,8 +17,8 @@ import es.um.sisdist.backend.dao.models.utils.UserUtils;
 
 public class User
 {
-	@BsonId // Esto indica que Mongo nos va a generar el ID
-	@BsonRepresentation(BsonType.OBJECT_ID) // Nos ayuda a tratarlo como String, aunque en realidad es un ObjectID
+	//@BsonId // Esto indica que Mongo nos va a generar el ID
+    //@BsonRepresentation(BsonType.OBJECT_ID) // Nos ayuda a tratarlo como String, aunque en realidad es un ObjectID
     private String uid;
 	
     private String email;
@@ -27,7 +29,7 @@ public class User
 
     private int visits;
 
-    private Map<String, DB> dbs;
+    private List<DB> dbs;
 
     /**
      * @return the id
@@ -125,27 +127,27 @@ public class User
         this.visits = visits;
     }
 
-    public Map<String, DB> getDbs()
+    public List<DB> getDbs()
     {
-        return Collections.unmodifiableMap(dbs);
+        return Collections.unmodifiableList(dbs);
     }
 
-    public void setDbs(Map<String, DB> dbs) {
+    public void setDbs(ArrayList<DB> dbs) {
         this.dbs = dbs;
     }
 
     public void addDB(DB db)
     {
-        dbs.put(db.getDbname(), db);
+        dbs.add(db);
     }
-
-    public DB getDB(String dbname)
+    
+    public User(String email, String password_hash, String name, String tOKEN, int visits, List<DB> dbs)
     {
-        return dbs.get(dbname);
+        this(email, email, password_hash, name, tOKEN, visits, dbs);
+        this.uid = UserUtils.md5pass(email);
     }
 
-
-    public User(String uid, String email, String password_hash, String name, String tOKEN, int visits, Map<String, DB> dbs)
+    public User(String uid, String email, String password_hash, String name, String tOKEN, int visits, List<DB> dbs)
     {
         this.uid = uid;
         this.email = email;

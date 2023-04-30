@@ -1,13 +1,14 @@
 package es.um.sisdist.backend.dao.models;
 
+import java.util.List;
 import java.util.Map;
 
 public class DB {
 
     private String dbname;
-    private Map<String, String> tables;
+    private List<Pair> tables;
     
-    public DB(String dbname, Map<String, String> tables) {
+    public DB(String dbname, List<Pair> tables) {
         this.dbname = dbname;
         this.tables = tables;
     }
@@ -23,7 +24,20 @@ public class DB {
         this.dbname = name;
     }
 
-    public Map<String, String> getTables() {
+    public List<Pair> getTables() {
         return tables;
+    }
+
+    public void setTables(List<Pair> tables) {
+        this.tables = tables;
+    }
+
+    public void addPair(String key, String value) {
+        tables.add(new Pair(key, value));
+    }
+
+    @Override
+    public String toString() {
+        return "DB [dbname=" + dbname + ", tables=" + tables + "]";
     }
 }

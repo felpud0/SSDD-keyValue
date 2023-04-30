@@ -39,4 +39,12 @@ public class UsersEndpoint
         User u = impl.register(uo);
         return Response.status(Status.CREATED).entity(uo).build();
     }
+
+    @GET
+    @Path("/")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUsers()
+    {
+        return Response.ok(impl.getAllUsers()).build();
+    }
 }

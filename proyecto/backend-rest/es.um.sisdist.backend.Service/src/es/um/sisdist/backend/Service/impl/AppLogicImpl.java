@@ -3,10 +3,15 @@
  */
 package es.um.sisdist.backend.Service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.logging.Logger;
+
+import org.bson.types.ObjectId;
 
 import com.mysql.cj.x.protobuf.MysqlxDatatypes.Array;
 
@@ -114,7 +119,15 @@ public class AppLogicImpl
     
     public User register(UserDTO userDTO) {
 
-        User registered = UserDTOUtils.fromDTO(userDTO);
+        User registered = new User();
+        registered.setDbs(new ArrayList<>());
+        registered.setEmail(userDTO.getEmail());
+        registered.setName(userDTO.getName());
+        registered.setPassword_hash(UserUtils.md5pass(userDTO.getPassword()));
+        registered.setToken("token");
+        registered.setVisits(0);
+        registered.setUid(UserUtils.md5pass(registered.getEmail()));
+
         dao.addUsr(registered);
         return registered;
     }
@@ -123,6 +136,7 @@ public class AppLogicImpl
 	public Optional<DB> addDB(String email, DBDTO dbdto) {
 		User dbOwner = getUserByEmail(email).get();
         DB db = DBDTOUtils.fromDTO(dbdto);
+        System.out.println(db.toString());
 		dbOwner.addDB(db);
 		dao.updateUsr(dbOwner);
 		return Optional.of(db);
@@ -135,9 +149,13 @@ public class AppLogicImpl
             return Optional.empty();
         }
         
-        DB db = dbOwner.get().getDB(dbName);
-        System.out.println(db);
-        return Optional.of(db);
+        //DB db = dbOwner.get().getDB(dbName);
+        //System.out.println(db.toString());
+        return null;
+    }
+
+    public List<User> getAllUsers() {
+        return dao.getAllUsers();
     }
 
     

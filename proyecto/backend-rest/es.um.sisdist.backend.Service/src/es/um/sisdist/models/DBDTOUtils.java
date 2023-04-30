@@ -1,21 +1,28 @@
 package es.um.sisdist.models;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import es.um.sisdist.backend.dao.models.DB;
+import es.um.sisdist.backend.dao.models.Pair;
 
 public class DBDTOUtils {
 
     public static DB fromDTO(DBDTO dbdto) {
-        HashMap<String,String> tables = new HashMap<String, String>();
-        dbdto.getD().forEach(d -> tables.put(d.getK(), d.getV()));
+        System.out.println("DBDTOUtils.fromDTO: " + dbdto.toString());
+        List<Pair> tables = new ArrayList<Pair>();
+        dbdto.getD().forEach(d -> tables.add(new Pair(d.getK(), d.getV())));
         return new DB(dbdto.getDbname(), tables);
     }
 
     public static DBDTO toDTO(DB db) {
+        System.out.println("DBDTOUtils.toDTO: " + db.toString());
         DBDTO dbdto = new DBDTO();
         dbdto.setDbname(db.getDbname());
-        db.getTables().forEach((k,v) -> dbdto.getD().add(new D(k,v)));
+        ArrayList<D> ds = new ArrayList<D>();
+        db.getTables().forEach((pair) -> ds.add(new D(pair.getKey(), pair.getValue())));
+        dbdto.setD(ds);
         return dbdto;
     }
 
