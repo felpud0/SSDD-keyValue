@@ -4,7 +4,7 @@
 <h1>Bases de datos:</h1>
 <div>
 {% for bbdd in bbdds %}
-  <br><a href="{{ bbdd }}">test</a> 
+  <br><a href="/bbdd/{{ bbdd['dbname'] }}">test</a> 
 {% endfor %}
 </div>
 <button type="button">
