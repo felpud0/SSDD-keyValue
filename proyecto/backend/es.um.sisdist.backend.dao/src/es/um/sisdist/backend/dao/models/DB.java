@@ -40,4 +40,14 @@ public class DB {
     public String toString() {
         return "DB [dbname=" + dbname + ", tables=" + tables + "]";
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null)
+            return false;
+        if (!(obj instanceof DB))
+            return false;
+        DB other = (DB) obj;
+        return dbname.equals(other.dbname);
+    }
 }

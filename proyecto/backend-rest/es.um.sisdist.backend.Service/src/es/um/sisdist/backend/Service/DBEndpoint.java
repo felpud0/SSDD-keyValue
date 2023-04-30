@@ -12,6 +12,7 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -51,6 +52,19 @@ public class DBEndpoint {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
+
+    @PUT
+    @Path("/{dbname}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateDB(@PathParam("username") String username, @PathParam("dbname") String dbname, DBDTO keyValues) {
+        System.out.println("UPDATE DB: " + username + " " + dbname);
+        if (AppLogicImpl.getInstance().updateDB(username, dbname, keyValues) ){
+            return Response.noContent().build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+    
 
 
 }

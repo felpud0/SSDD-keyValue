@@ -172,6 +172,18 @@ public class AppLogicImpl
         return isDeleted;
     }
 
+    public boolean updateDB(String email, String dbname,  DBDTO dbdto) {
+        Optional<User> dbOwner = getUserByEmail(email);
+        if  (dbOwner.isEmpty()) {
+            System.out.println("No existe el usuario");
+            return false;
+        }
+        
+        boolean isUpdated= dbOwner.get().updateDB(dbname, DBDTOUtils.fromDTO(dbdto));
+        dao.updateUsr(dbOwner.get());
+        return isUpdated;
+    }
+
     
     
 }

@@ -14,6 +14,7 @@ import org.bson.BsonType;
 import org.bson.codecs.pojo.annotations.BsonId;
 import org.bson.codecs.pojo.annotations.BsonRepresentation;
 
+import java.util.stream.Collectors;
 import es.um.sisdist.backend.dao.models.utils.UserUtils;
 
 public class User
@@ -150,6 +151,18 @@ public class User
     public void addDB(DB db)
     {
         dbs.add(db);
+    }
+
+    public boolean updateDB(String dbName, DB db)
+    {
+        int index = dbs.stream().map(DB::getDbname).collect(Collectors.toList()).indexOf(dbName);
+        if (index != -1)
+        {
+            dbs.set(index, db);
+            return true;
+        }
+        return false;
+
     }
     
     public User(String email, String password_hash, String name, String tOKEN, int visits, List<DB> dbs)
