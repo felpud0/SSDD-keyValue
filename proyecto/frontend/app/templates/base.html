@@ -77,6 +77,17 @@
       </div>
     </div>
   </nav>
+  <nav
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul class=flashes>
+      {% for message in messages %}
+        <li><b>{{ message }}</b></li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+  </nav>
 </header>
 
 <!-- Begin page content -->
