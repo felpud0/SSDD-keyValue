@@ -98,6 +98,12 @@ def bbdd():
     bbdds = getUserInfo(current_user.email)['dbs']
     return render_template('bbdd.html', bbdds=bbdds)
 
+@app.route('/bbdd/<bbdd>')
+@login_required
+def bbddInfo(bbdd):
+    respuesta = getDBInfo(current_user.email, bbdd)
+    return render_template('bbddInfo.html', bbdd=respuesta)
+
 
 @app.route('/logout')
 @login_required
@@ -145,6 +151,12 @@ def sendSignUp(email, name, password):
 
 def getUserInfo(email):
     respuesta = requests.get('http://backend-rest:8080/Service/u/'+email)
+    if respuesta.status_code == 200:
+        return respuesta.json()
+    return None
+
+def getDBInfo(email, db):
+    respuesta = requests.get('http://backend-rest:8080/Service/u/'+email+'/db/'+db)
     if respuesta.status_code == 200:
         return respuesta.json()
     return None

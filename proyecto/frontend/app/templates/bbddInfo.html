@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Nombre: {{ bbdd['dbname'] }}</h1>
+<h3>Datos:</h3>
+<div>
+{% for pair in bbdd['d'] %}
+<table>
+    <tr>
+        <td>{{ pair['k'] }}</td>
+        <td>{{ pair['v'] }}</td>
+    </tr>
+</table>
+  
+{% endfor %}
