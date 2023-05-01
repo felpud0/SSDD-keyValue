@@ -1,0 +1,29 @@
+<style>
+    table, th, td {
+      border:1px solid black;
+    }
+</style>
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Modificar base de datos: {{ bbdd['dbname'] }}</h1>
+
+<form method="get" action=" {{ url_for('bbddModificar', id=bbdd['dbname']) }}">      
+<input type="submit" value="Submit now" />      
+<table style="width:50%">
+    <tr>
+        <th>Clave</th>
+        <th>Valor</th>
+        <th>Borrar</th>
+    </tr>
+        {% for pair in bbdd['d'] %}
+        <tr>
+            <td>{{ pair['k'] }}</td>
+            <td>{{ pair['v'] }}</td>
+            <td><input type="checkbox" name="key" value={{ pair['k'] }}> </td>
+
+        </tr>
+        {% endfor %}
+</table>
+</form>
+{% endblock %}

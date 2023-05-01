@@ -197,6 +197,17 @@ public class AppLogicImpl
 
     }
 
+    public boolean updateKeyValue(String email, String dbname, String key, String value) {
+        Optional<User> dbOwner = getUserByEmail(email);
+        if  (dbOwner.isEmpty()) {
+            System.out.println("No existe el usuario");
+            return false;
+        }
+        
+        boolean isAdded = dbOwner.get().updatePair(dbname, key, value);
+        dao.updateUsr(dbOwner.get());
+        return isAdded;
+    }
     
     
 }

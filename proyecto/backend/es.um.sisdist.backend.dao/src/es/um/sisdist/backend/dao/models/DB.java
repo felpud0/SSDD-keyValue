@@ -41,6 +41,16 @@ public class DB {
         return tables.stream().filter(p -> p.getKey().equals(key)).findFirst();
     }
 
+    public boolean updatePair(String key, String value) {
+        Optional<Pair> pair = getPair(key);
+        if (pair.isPresent()) {
+            pair.get().setValue(value);
+            pair.get().setKey(key);
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public String toString() {
         return "DB [dbname=" + dbname + ", tables=" + tables + "]";

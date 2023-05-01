@@ -74,6 +74,17 @@ public class DBEndpoint {
         return Response.ok(AppLogicImpl.getInstance().getKeyValue(username, dbname, key)).build();
     }
 
+    @PUT
+    @Path("/{dbname}/d/{key}")
+    public Response updateDBKey(@PathParam("username") String username, @PathParam("dbname") String dbname, @PathParam("key") String key, @QueryParam("v") String value) {
+        System.out.println("UPDATE DB KEY: " + username + " " + dbname + " " + key + " " + value);
+        if (AppLogicImpl.getInstance().updateKeyValue(username, dbname, key, value) ){
+            return Response.noContent().build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
 
 
 

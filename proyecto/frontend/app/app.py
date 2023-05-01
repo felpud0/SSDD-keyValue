@@ -116,6 +116,35 @@ def bbddEliminar(id):
     flash(info)
     return redirect(url_for('bbdd'))
 
+@app.route('/bbdd/<id>/modificar')
+@login_required
+def bbddModificar(id):
+    respuesta = getDBInfo(current_user.email,id)
+    if request.args.__len__() == 0:
+        return render_template('bbddModificar.html', bbdd=respuesta)
+    
+    keys = request.args.getlist("key")
+    app.logger.debug(respuesta['d'])
+    for key in keys:
+        app.logger.debug("Key: "+key)
+        # Remove entry ( {key: value}) from d list in response
+        for entry in respuesta['d']:
+            if entry['k'] == key:
+                respuesta['d'].remove(entry)
+                break
+    app.logger.debug(respuesta)
+
+    # Send request to backend
+    respuesta = updateDB(current_user.email, id, respuesta)
+    if respuesta.status_code != 204:
+        flash("Error al modificar la base de datos")
+    else:
+        flash("Base de datos modificada con éxito")
+    
+    return redirect(url_for('bbddModificar', id=id))
+
+    
+
 
 @app.route('/logout')
 @login_required
@@ -175,6 +204,10 @@ def getDBInfo(email, db):
 
 def removeDB(email, db):
     respuesta = requests.delete('http://backend-rest:8080/Service/u/'+email+'/db/'+db)
+    return respuesta
+
+def updateDB(email, db, data):
+    respuesta = requests.put('http://backend-rest:8080/Service/u/'+email+'/db/'+db, json=data)
     return respuesta
 
 if __name__ == '__main__':

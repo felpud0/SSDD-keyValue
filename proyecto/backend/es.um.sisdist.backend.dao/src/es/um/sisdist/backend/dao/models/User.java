@@ -169,6 +169,11 @@ public class User
     {
         return getDB(dbName).orElseThrow().getPair(pairName);
     }
+
+    public boolean updatePair(String dbName, String key, String value)
+    {
+        return getDB(dbName).orElseThrow().updatePair(key, value);
+    }
     
     public User(String email, String password_hash, String name, String tOKEN, int visits, List<DB> dbs)
     {
