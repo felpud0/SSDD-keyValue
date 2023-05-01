@@ -2,6 +2,7 @@ package es.um.sisdist.backend.dao.models;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class DB {
 
@@ -34,6 +35,10 @@ public class DB {
 
     public void addPair(String key, String value) {
         tables.add(new Pair(key, value));
+    }
+
+    public Optional<Pair> getPair(String key) {
+        return tables.stream().filter(p -> p.getKey().equals(key)).findFirst();
     }
 
     @Override

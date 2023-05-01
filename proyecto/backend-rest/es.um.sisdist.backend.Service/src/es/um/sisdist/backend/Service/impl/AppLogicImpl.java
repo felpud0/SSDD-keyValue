@@ -26,6 +26,7 @@ import es.um.sisdist.models.UserDTOUtils;
 import es.um.sisdist.backend.dao.DAOFactoryImpl;
 import es.um.sisdist.backend.dao.IDAOFactory;
 import es.um.sisdist.backend.dao.models.DB;
+import es.um.sisdist.backend.dao.models.Pair;
 import es.um.sisdist.backend.dao.models.User;
 import es.um.sisdist.backend.dao.models.utils.UserUtils;
 import es.um.sisdist.backend.dao.user.IUserDAO;
@@ -182,6 +183,18 @@ public class AppLogicImpl
         boolean isUpdated= dbOwner.get().updateDB(dbname, DBDTOUtils.fromDTO(dbdto));
         dao.updateUsr(dbOwner.get());
         return isUpdated;
+    }
+
+    public D getKeyValue(String email, String dbname, String key) {
+        Optional<User> dbOwner = getUserByEmail(email);
+        if  (dbOwner.isEmpty()) {
+            System.out.println("No existe el usuario");
+            return null;
+        }
+        
+        Pair p = dbOwner.get().getPair(dbname, key).get(); 
+        return new D(p.getKey(), p.getValue());
+
     }
 
     

@@ -1,5 +1,8 @@
 package es.um.sisdist.models;
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class D{
     private String k;
     private String v;

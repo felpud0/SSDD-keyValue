@@ -16,6 +16,7 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -64,7 +65,17 @@ public class DBEndpoint {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
-    
+
+    @GET
+    @Path("/{dbname}/d/{key}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getDBKey( @PathParam("username") String username, @PathParam("dbname") String dbname, @PathParam("key") String key) {
+        System.out.println("GET DB KEY: " + username + " " + dbname + " " + key);
+        return Response.ok(AppLogicImpl.getInstance().getKeyValue(username, dbname, key)).build();
+    }
+
+
+
 
 
 }

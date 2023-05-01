@@ -164,6 +164,11 @@ public class User
         return false;
 
     }
+
+    public Optional<Pair> getPair(String dbName, String pairName)
+    {
+        return getDB(dbName).orElseThrow().getPair(pairName);
+    }
     
     public User(String email, String password_hash, String name, String tOKEN, int visits, List<DB> dbs)
     {
