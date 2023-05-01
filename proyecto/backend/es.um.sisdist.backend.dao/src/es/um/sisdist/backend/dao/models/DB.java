@@ -51,6 +51,10 @@ public class DB {
         return false;
     }
 
+    public boolean deletePair(String key) {
+        return tables.removeIf(p -> p.getKey().equals(key));
+    }
+
     @Override
     public String toString() {
         return "DB [dbname=" + dbname + ", tables=" + tables + "]";

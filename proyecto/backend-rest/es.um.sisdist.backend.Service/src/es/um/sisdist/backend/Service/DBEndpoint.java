@@ -85,6 +85,17 @@ public class DBEndpoint {
         }
     }
 
+    @DELETE
+    @Path("/{dbname}/d/{key}")
+    public Response deleteDBKey(@PathParam("username") String username, @PathParam("dbname") String dbname, @PathParam("key") String key) {
+        System.out.println("DELETE DB KEY: " + username + " " + dbname + " " + key);
+        if (AppLogicImpl.getInstance().deleteKeyValue(username, dbname, key) ){
+            return Response.noContent().build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
 
 
 
