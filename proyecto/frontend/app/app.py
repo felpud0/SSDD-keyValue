@@ -143,7 +143,15 @@ def bbddModificar(id):
     
     return redirect(url_for('bbddModificar', id=id))
 
-    
+@app.route('/bbdd/<bdid>/<key>/eliminar')
+@login_required
+def bbddEliminarKey(bdid, key):
+    respuesta = deletePair(current_user.email, bdid, key)
+    if respuesta.status_code != 204:
+        flash("Error al eliminar el par <"+key+">")
+    else:
+        flash("Par <"+key+"> eliminado con éxito")
+    return redirect(url_for('bbddModificar', id=bdid))
 
 
 @app.route('/logout')
@@ -208,6 +216,10 @@ def removeDB(email, db):
 
 def updateDB(email, db, data):
     respuesta = requests.put('http://backend-rest:8080/Service/u/'+email+'/db/'+db, json=data)
+    return respuesta
+
+def deletePair(email, db, key):
+    respuesta = requests.delete('http://backend-rest:8080/Service/u/'+email+'/db/'+db+'/d/'+key)
     return respuesta
 
 if __name__ == '__main__':

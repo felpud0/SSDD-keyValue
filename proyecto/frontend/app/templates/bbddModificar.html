@@ -20,7 +20,7 @@
         <tr>
             <td>{{ pair['k'] }}</td>
             <td>{{ pair['v'] }}</td>
-            <td><input type="checkbox" name="key" value={{ pair['k'] }}> </td>
+            <td><button type="submit" formaction=" {{ url_for('bbddEliminarKey', key=pair['k'], bdid=bbdd['dbname'] ) }}"> Eliminar </button></td>
 
         </tr>
         {% endfor %}
