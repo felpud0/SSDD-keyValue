@@ -96,6 +96,20 @@ public class DBEndpoint {
         }
     }
 
+    @POST
+    @Path("/{dbname}/d")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createDBKey(@PathParam("username") String username, @PathParam("dbname") String dbname, Map<String, String> keyValues) {
+        System.out.println("CREATE DB KEY: " + username + " " + dbname + " " + keyValues.toString());
+        if (AppLogicImpl.getInstance().addKeyValue(username, dbname, keyValues.get("k"), keyValues.get("v")) ){
+            //Return created with URL to the new resource
+            URI uri = URI.create("/u/" + username + "/db/"+dbname+"/d/"+keyValues.get("k"));
+            return Response.created(uri).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
 
 
 

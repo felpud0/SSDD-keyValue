@@ -220,6 +220,18 @@ public class AppLogicImpl
         dao.updateUsr(dbOwner.get());
         return isDeleted;
     }
+
+    public boolean addKeyValue(String email, String dbname, String key, String value) {
+        Optional<User> dbOwner = getUserByEmail(email);
+        if  (dbOwner.isEmpty()) {
+            System.out.println("No existe el usuario");
+            return false;
+        }
+        
+        boolean isAdded = dbOwner.get().addPair(dbname, key, value);
+        dao.updateUsr(dbOwner.get());
+        return isAdded;
+    }
     
     
 }

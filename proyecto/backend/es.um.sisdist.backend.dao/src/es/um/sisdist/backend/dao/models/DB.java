@@ -33,8 +33,8 @@ public class DB {
         this.tables = tables;
     }
 
-    public void addPair(String key, String value) {
-        tables.add(new Pair(key, value));
+    public boolean addPair(String key, String value) {
+        return tables.add(new Pair(key, value));
     }
 
     public Optional<Pair> getPair(String key) {

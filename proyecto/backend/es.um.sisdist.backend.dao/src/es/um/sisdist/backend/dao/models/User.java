@@ -179,6 +179,11 @@ public class User
     {
         return getDB(dbName).orElseThrow().deletePair(key);
     }
+
+    public boolean addPair(String dbName, String key, String value)
+    {
+        return getDB(dbName).orElseThrow().addPair(key,value);
+    }
     
     public User(String email, String password_hash, String name, String tOKEN, int visits, List<DB> dbs)
     {
