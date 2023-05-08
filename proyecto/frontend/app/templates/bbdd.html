@@ -3,15 +3,25 @@
 {% block content %}
 <h1>Bases de datos:</h1>
 <div>
-<form style="display: inline-block;">
-{% for bbdd in bbdds %}
+    Crear tu nueva base de datos:
+    <form action=" {{ url_for('bbdd') }} " method="post">
+        <input type="text" name="bdid" placeholder="Nombre de la base de datos">
+        <input type="submit" value="Crear">
+    </form>
+</div>
 <div>
-    <b>{{ bbdd['dbname'] }}</b> 
-    <button type="submit" formaction="/bbdd/{{ bbdd['dbname'] }}"> Ver</button>
-    <button type="submit" formaction="/bbdd/{{ bbdd['dbname'] }}/eliminar"> Eliminar</button>
-    <button type="submit" formaction="/bbdd/{{ bbdd['dbname'] }}/modificar"> Modificar</button>
+    <p>Tus bases de datos:</p>
+    <form style="display: inline-block;">
+        {% for bbdd in bbdds %}
+        <div style="display: flex;flex-direction: row;justify-content: space-between;">
+            <b>{{ bbdd['dbname'] }}</b>
+            <div >
+                <button type="submit" formaction="/bbdd/{{ bbdd['dbname'] }}"> Ver</button>
+                <button type="submit" formaction="/bbdd/{{ bbdd['dbname'] }}/eliminar"> Eliminar</button>
+                <button type="submit" formaction="/bbdd/{{ bbdd['dbname'] }}/modificar"> Modificar</button>
+            </div>
+        </div>
+        {% endfor %}
+    </form>
 </div>
-{% endfor %}
-</div>
-</form>
 {% endblock %}

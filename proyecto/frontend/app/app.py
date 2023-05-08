@@ -92,11 +92,22 @@ def profile():
     respuesta = getUserInfo(current_user.email)
     return render_template('profile.html', user=respuesta)
 
-@app.route('/bbdd')
+@app.route('/bbdd', methods=['GET', 'POST'])
 @login_required
 def bbdd():
-    bbdds = getUserInfo(current_user.email)['dbs']
-    return render_template('bbdd.html', bbdds=bbdds)
+    if request.method == 'GET':
+        bbdds = getUserInfo(current_user.email)['dbs']
+        return render_template('bbdd.html', bbdds=bbdds)
+    
+    bdid = request.form['bdid']
+    respuesta = addDB(current_user.email, bdid)
+    if respuesta.status_code != 201:
+        flash("Error al añadir la base de datos <"+bdid+">")
+    else:
+        flash("Base de datos <"+bdid+"> añadida con éxito")
+    return redirect(url_for('bbdd'))
+    
+
 
 @app.route('/bbdd/<id>')
 @login_required
@@ -218,6 +229,11 @@ def removeDB(email, db):
 
 def updateDB(email, db, data):
     respuesta = requests.put('http://backend-rest:8080/Service/u/'+email+'/db/'+db, json=data)
+    return respuesta
+
+def addDB(email, dbname):
+    data = {"dbname": dbname}
+    respuesta = requests.post('http://backend-rest:8080/Service/u/'+email+'/db/', json=data)
     return respuesta
 
 def deletePair(email, db, key):

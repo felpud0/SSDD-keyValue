@@ -12,6 +12,9 @@ public class DBDTOUtils {
     public static DB fromDTO(DBDTO dbdto) {
         System.out.println("DBDTOUtils.fromDTO: " + dbdto.toString());
         List<Pair> tables = new ArrayList<Pair>();
+        if (dbdto.getD() == null) {
+            dbdto.setD(new ArrayList<D>());
+        }
         dbdto.getD().forEach(d -> tables.add(new Pair(d.getK(), d.getV())));
         return new DB(dbdto.getDbname(), tables);
     }
