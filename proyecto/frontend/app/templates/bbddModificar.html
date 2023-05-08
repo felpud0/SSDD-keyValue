@@ -8,7 +8,6 @@
 {% block content %}
 <h1>Modificar base de datos: {{ bbdd['dbname'] }}</h1>
 
-<form method="get" action=" {{ url_for('bbddModificar', id=bbdd['dbname']) }}">      
 <input type="submit" value="Submit now" />      
 <table style="width:50%">
     <tr>
@@ -20,10 +19,19 @@
         <tr>
             <td>{{ pair['k'] }}</td>
             <td>{{ pair['v'] }}</td>
-            <td><button type="submit" formaction=" {{ url_for('bbddEliminarKey', key=pair['k'], bdid=bbdd['dbname'] ) }}"> Eliminar </button></td>
+            <td>
+                <form method="get" action=" {{ url_for('bbddEliminarKey', key=pair['k'], id=bbdd['dbname'] ) }}">
+                    <button type="submit" > Eliminar </button>
+                </form>
+            <td>
+                <form method="post" action="{{ url_for('bbddModificar', id=bbdd['dbname'] ) }}">
+                    <input type="hidden" id="key" name="key" value="{{ pair['k'] }}">
+                    {{ pair['k'] }} : <input type="text" id="value" name="value" placeholder="Introduce valor para la clave" required />
+                    <button type="submit" > Modificar </button>
+                </form>
+            </td>
 
         </tr>
         {% endfor %}
 </table>
-</form>
 {% endblock %}

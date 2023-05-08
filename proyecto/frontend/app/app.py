@@ -116,42 +116,32 @@ def bbddEliminar(id):
     flash(info)
     return redirect(url_for('bbdd'))
 
-@app.route('/bbdd/<id>/modificar')
+@app.route('/bbdd/<id>/modificar' , methods=['GET', 'POST'])
 @login_required
 def bbddModificar(id):
     respuesta = getDBInfo(current_user.email,id)
-    if request.args.__len__() == 0:
+    if request.method == 'GET':
         return render_template('bbddModificar.html', bbdd=respuesta)
     
-    keys = request.args.getlist("key")
-    app.logger.debug(respuesta['d'])
-    for key in keys:
-        app.logger.debug("Key: "+key)
-        # Remove entry ( {key: value}) from d list in response
-        for entry in respuesta['d']:
-            if entry['k'] == key:
-                respuesta['d'].remove(entry)
-                break
-    app.logger.debug(respuesta)
-
-    # Send request to backend
-    respuesta = updateDB(current_user.email, id, respuesta)
+    key = request.form['key']
+    value = request.form['value']
+    respuesta = updatePair(current_user.email, id, key, value)
     if respuesta.status_code != 204:
-        flash("Error al modificar la base de datos")
+        flash("Error al modificar el par <"+key+">")
     else:
-        flash("Base de datos modificada con éxito")
-    
+        flash("Par <"+key+"> modificado con éxito")
     return redirect(url_for('bbddModificar', id=id))
 
-@app.route('/bbdd/<bdid>/<key>/eliminar')
+
+@app.route('/bbdd/<id>/<key>/eliminar')
 @login_required
-def bbddEliminarKey(bdid, key):
-    respuesta = deletePair(current_user.email, bdid, key)
+def bbddEliminarKey(id, key):
+    respuesta = deletePair(current_user.email, id, key)
     if respuesta.status_code != 204:
         flash("Error al eliminar el par <"+key+">")
     else:
         flash("Par <"+key+"> eliminado con éxito")
-    return redirect(url_for('bbddModificar', id=bdid))
+    return redirect(url_for('bbddModificar', id=id))
 
 
 @app.route('/logout')
@@ -220,6 +210,11 @@ def updateDB(email, db, data):
 
 def deletePair(email, db, key):
     respuesta = requests.delete('http://backend-rest:8080/Service/u/'+email+'/db/'+db+'/d/'+key)
+    return respuesta
+
+def updatePair(email, db, key, value):
+    #data = {"k": key, "v": value}
+    respuesta = requests.put('http://backend-rest:8080/Service/u/'+email+'/db/'+db+'/d/'+key+"?v="+value)
     return respuesta
 
 if __name__ == '__main__':
