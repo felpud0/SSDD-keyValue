@@ -35,7 +35,6 @@ def login():
     form = LoginForm(None if request.method != 'POST' else request.form)
 
     if not(request.method == "POST"):
-        error = 'Mala mia, algo ha fallado'
         return render_template('login.html', form=form,  error=error)
     
     if not sendLogin(form.email.data, form.password.data):
@@ -102,7 +101,7 @@ def bbdd():
     bdid = request.form['bdid']
     respuesta = addDB(current_user.email, bdid)
     if respuesta.status_code != 201:
-        flash("Error al añadir la base de datos <"+bdid+">")
+        flash("Error al añadir la base de datos <"+bdid+">: " + respuesta.status_code)
     else:
         flash("Base de datos <"+bdid+"> añadida con éxito")
     return redirect(url_for('bbdd'))
@@ -160,7 +159,7 @@ def bbddAnadirKey(id):
     key = request.form['key']
     value = request.form['value']
     respuesta = addPair(current_user.email, id, key, value)
-    if respuesta.status_code != 204:
+    if respuesta.status_code != 201:
         flash("Error al añadir el par <"+key+":"+value+">")
     else:
         flash("Par <"+key+":"+value+"> añadido con éxito")
@@ -196,7 +195,7 @@ def sendSignUp(email, name, password):
     # Enviar solicitud al backend
     registro = {'email': email, 'name': name, 'password': password}
     try:
-        respuesta = requests.post('http://backend-rest:8080/Service/registerUsr', json=registro)
+        respuesta = requests.post('http://backend-rest:8080/Service/u/', json=registro)
     except requests.exceptions.RequestException as e:
         # Manejo de errores
         app.logger.error("Error sending registration request: " + str(e))
