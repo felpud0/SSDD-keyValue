@@ -10,13 +10,13 @@ A continuación, seguir con el apartado de Ejecución.
 Para ejecutar el proyecto, ejecuta en la carpeta proyecto: 
 ````
 make;
-docker-compse -f docker-compose-devel.yml up;
+docker-compose -f docker-compose-devel-mongo.yml up;
 ````
 
 Para ejecutar cuando se han realizado cambios en el código, ejecuta en la carpeta proyecto: 
 ````
 make;
-docker-compse -f docker-compose-devel.yml up --build;
+docker-compse -f docker-compose-devel-mongo.yml up --build;
 ````
 
 # Prueba
