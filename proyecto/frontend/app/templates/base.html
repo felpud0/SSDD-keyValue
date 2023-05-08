@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Flask Auth Example</title>
+    <title>Key-Value Managment</title>
     <link href="/static/bootstrap.min.css" rel="stylesheet" 
     />
     <link rel="shortcut icon" href="{{ url_for('serve_static', path='favicon.ico') }}">
@@ -33,9 +33,9 @@
 <body class="d-flex flex-column h-100">
 <header>
   <!-- Fixed navbar -->
-  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark" style="position: relative;background-color: #055160!important;">
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark" style="position: relative;">
     <div class="container-fluid">
-      <a class="navbar-brand" href="{{ url_for('index') }}">Mi magnífica aplicación</a>
+      <a class="navbar-brand" href="{{ url_for('index') }}">FG Key-Value Manager</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -80,7 +80,7 @@
 {% with messages = get_flashed_messages() %}
   {% if messages %}
     {% for message in messages %}
-    <nav class="navbar-dark  bg-dark" style="position: relative;">
+    <nav class="navbar-dark  bg-dark" style="position: relative;background-color: #055160!important;">
       <div class="container-fluid navbar-brand" style="">
       <b>{{ message }}</b>
     </div>
