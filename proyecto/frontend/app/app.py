@@ -143,6 +143,18 @@ def bbddEliminarKey(id, key):
         flash("Par <"+key+"> eliminado con éxito")
     return redirect(url_for('bbddModificar', id=id))
 
+@app.route('/bbdd/<id>/anadir' , methods=['POST']) 
+@login_required
+def bbddAnadirKey(id):
+    key = request.form['key']
+    value = request.form['value']
+    respuesta = addPair(current_user.email, id, key, value)
+    if respuesta.status_code != 204:
+        flash("Error al añadir el par <"+key+":"+value+">")
+    else:
+        flash("Par <"+key+":"+value+"> añadido con éxito")
+    return redirect(url_for('bbddModificar', id=id))
+
 
 @app.route('/logout')
 @login_required
@@ -215,6 +227,11 @@ def deletePair(email, db, key):
 def updatePair(email, db, key, value):
     #data = {"k": key, "v": value}
     respuesta = requests.put('http://backend-rest:8080/Service/u/'+email+'/db/'+db+'/d/'+key+"?v="+value)
+    return respuesta
+
+def addPair(email, db, key, value):
+    data = {"k": key, "v": value}
+    respuesta = requests.post('http://backend-rest:8080/Service/u/'+email+'/db/'+db+'/d', json=data)
     return respuesta
 
 if __name__ == '__main__':

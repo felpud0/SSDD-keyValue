@@ -8,29 +8,35 @@
 {% block content %}
 <h1>Modificar base de datos: {{ bbdd['dbname'] }}</h1>
 
-<input type="submit" value="Submit now" />      
+<form method="post" action="{{ url_for('bbddAnadirKey', id=bbdd['dbname'] ) }}">
+    Añade una nueva clave-valor a la base de datos:
+        <input type="text" id="key" name="key" placeholder="Introduce clave" required /> 
+        - 
+        <input type="text" id="value" name="value" placeholder="Introduce valor" required />
+    <button type="submit" > Insertar </button>
+</form>
+
 <table style="width:50%">
     <tr>
         <th>Clave</th>
         <th>Valor</th>
-        <th>Borrar</th>
     </tr>
         {% for pair in bbdd['d'] %}
         <tr>
             <td>{{ pair['k'] }}</td>
             <td>{{ pair['v'] }}</td>
             <td>
-                <form method="get" action=" {{ url_for('bbddEliminarKey', key=pair['k'], id=bbdd['dbname'] ) }}">
-                    <button type="submit" > Eliminar </button>
-                </form>
-            <td>
                 <form method="post" action="{{ url_for('bbddModificar', id=bbdd['dbname'] ) }}">
                     <input type="hidden" id="key" name="key" value="{{ pair['k'] }}">
-                    {{ pair['k'] }} : <input type="text" id="value" name="value" placeholder="Introduce valor para la clave" required />
+                    <input type="text" id="value" name="value" placeholder="Introduce valor para la clave" required />
                     <button type="submit" > Modificar </button>
                 </form>
             </td>
-
+            <td>
+                <form method="get" action=" {{ url_for('bbddEliminarKey', key=pair['k'], id=bbdd['dbname'] ) }}">
+                    <button type="submit" > Eliminar </button>
+                </form>
+            </td>
         </tr>
         {% endfor %}
 </table>
