@@ -8,18 +8,25 @@
 {% block content %}
 <h1>Nombre: {{ bbdd['dbname'] }}</h1>
 <h3>Datos:</h3>
+
+<form action="/bbdd/{{ bbdd['dbname'] }}/search" method="get">
+    <input type="search" id="site-search" name="q">
+    <input type="hidden" name="page" value="1">
+    <button>Search key</button>
+</form>
+
 <div>
 <table style="width:50%">
     <tr>
         <th>Clave</th>
         <th>Valor</th>
     </tr>
-{% for pair in bbdd['d'] %}
-    <tr>
-        <td>{{ pair['k'] }}</td>
-        <td>{{ pair['v'] }}</td>
-    </tr>
-{% endfor %}
+        {% for pair in bbdd['d'] %}
+        <tr>
+            <td>{{ pair['k'] }}</td>
+            <td>{{ pair['v'] }}</td>
+        </tr>
+        {% endfor %}
 </table>
 </div>
 

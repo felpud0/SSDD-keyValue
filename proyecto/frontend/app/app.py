@@ -165,6 +165,19 @@ def bbddAnadirKey(id):
         flash("Par <"+key+":"+value+"> añadido con éxito")
     return redirect(url_for('bbddModificar', id=id))
 
+@app.route('/bbdd/<id>/search' , methods=['GET'])
+@login_required
+def bbddSearch(id):
+    query = request.args.get('q')
+    page = request.args.get('page')
+    respuesta = searchPair(current_user.email, id, query, page)
+    if respuesta.status_code != 200:
+        flash("Error al buscar <"+query+">")
+        return redirect(url_for('bbddSearch', id=id))
+    else:
+        flash("Claves con <"+query+"> encontrado con éxito")
+    respuestaJ = respuesta.json()
+    return render_template('bbddSearch.html', searchResponse=respuestaJ )
 
 @app.route('/logout')
 @login_required
@@ -247,6 +260,10 @@ def updatePair(email, db, key, value):
 def addPair(email, db, key, value):
     data = {"k": key, "v": value}
     respuesta = requests.post('http://backend-rest:8080/Service/u/'+email+'/db/'+db+'/d', json=data)
+    return respuesta
+
+def searchPair(email, db, query, page='1', perpage='5'):
+    respuesta = requests.get('http://backend-rest:8080/Service/u/'+email+'/db/'+db+'/q?pattern='+query+'&page='+page+'&perpage='+perpage)
     return respuesta
 
 if __name__ == '__main__':
