@@ -184,6 +184,11 @@ public class User
     {
         return getDB(dbName).orElseThrow().addPair(key,value);
     }
+
+    public List<Pair> queryDB(String dbName, String pattern)
+    {
+        return getDB(dbName).orElseThrow().query(pattern);
+    }
     
     public User(String email, String password_hash, String name, String tOKEN, int visits, List<DB> dbs)
     {

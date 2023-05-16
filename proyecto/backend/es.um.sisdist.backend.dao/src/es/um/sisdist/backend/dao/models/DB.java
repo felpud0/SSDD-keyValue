@@ -3,6 +3,7 @@ package es.um.sisdist.backend.dao.models;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class DB {
 
@@ -53,6 +54,10 @@ public class DB {
 
     public boolean deletePair(String key) {
         return tables.removeIf(p -> p.getKey().equals(key));
+    }
+
+    public List<Pair> query(String pattern) {
+        return tables.stream().filter(pair -> pair.getKey().startsWith(pattern)).collect(Collectors.toList());
     }
 
     @Override

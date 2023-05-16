@@ -1,11 +1,14 @@
 package es.um.sisdist.backend.Service;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 import es.um.sisdist.backend.Service.impl.AppLogicImpl;
 import es.um.sisdist.backend.dao.models.User;
+import es.um.sisdist.models.D;
 import es.um.sisdist.models.DBDTO;
 import es.um.sisdist.models.DBDTOUtils;
+import es.um.sisdist.models.QueryResponse;
 import es.um.sisdist.models.UserDTO;
 import es.um.sisdist.models.UserDTOUtils;
 import jakarta.ws.rs.Consumes;
@@ -22,6 +25,11 @@ import jakarta.ws.rs.core.Response;
 
 @Path("/u/{username}/db")
 public class DBEndpoint {
+
+    /**
+     *
+     */
+    private static final int DEFAULT_PERPAGE = 50;
 
     @POST
     @Path("/")
@@ -110,8 +118,22 @@ public class DBEndpoint {
         }
     }
 
-
-
+    @GET
+    @Path("/{dbname}/q")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response queryDB( @PathParam("username") String username, @PathParam("dbname") String dbname, 
+    @QueryParam("pattern") String pattern, @QueryParam("page") int page, @QueryParam("perpage") int perpage) {
+       
+        int nEntries = perpage == 0 ? DEFAULT_PERPAGE : perpage;
+        System.out.println("QUERY DB: " + username + " " + dbname + " " + pattern + " " + page + " " + nEntries);
+        List<D> pageData = AppLogicImpl.getInstance().queryDB(username, dbname, pattern, page, perpage);
+        QueryResponse body = new QueryResponse();
+        body.dbname = dbname;
+        body.page = page;
+        body.perpage = nEntries;
+        body.d = pageData;
+        return Response.ok(body).build();
+    }
 
 
 }
