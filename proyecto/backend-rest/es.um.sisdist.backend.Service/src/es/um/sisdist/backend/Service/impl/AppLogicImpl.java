@@ -233,24 +233,14 @@ public class AppLogicImpl
         return isAdded;
     }
 
-    public List<D> queryDB(String email, String dbname, String query, int page, int perpage) {
+    public List<Pair> queryDB(String email, String dbname, String query) {
         Optional<User> dbOwner = getUserByEmail(email);
         if  (dbOwner.isEmpty()) {
             System.out.println("No existe el usuario");
             return null;
         }
-        
-        System.out.println("Querying DB: " + dbname + " with query: " + query);
         List<Pair> pairs = dbOwner.get().queryDB(dbname, query);
-        System.out.println("Pairs: " + pairs.toString());
-        List<List<Pair>> pages = pairs.stream().collect(Collectors.groupingBy(s -> (pairs.indexOf(s) / perpage))).values().stream().collect(Collectors.toList());
-        System.out.println("Pages: " + pages.toString());
-        if (pages.isEmpty()) {
-            System.out.println("No hay resultados");
-            return new ArrayList<D>();
-        }
-        return pages.get(page-1).stream().map(p -> new D(p.getKey(), p.getValue())).collect(Collectors.toList());
+        return pairs;
     }
-    
-    
+
 }

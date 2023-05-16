@@ -1,9 +1,13 @@
 package es.um.sisdist.backend.Service;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import es.um.sisdist.backend.Service.impl.AppLogicImpl;
+import es.um.sisdist.backend.dao.models.Pair;
 import es.um.sisdist.backend.dao.models.User;
 import es.um.sisdist.models.D;
 import es.um.sisdist.models.DBDTO;
@@ -126,14 +130,30 @@ public class DBEndpoint {
        
         int nEntries = perpage == 0 ? DEFAULT_PERPAGE : perpage;
         System.out.println("QUERY DB: " + username + " " + dbname + " " + pattern + " " + page + " " + nEntries);
-        List<D> pageData = AppLogicImpl.getInstance().queryDB(username, dbname, pattern, page, perpage);
+
+        //Conseguimos los pares que coinciden con el patrón
+        List<Pair> pairs = AppLogicImpl.getInstance().queryDB(username, dbname, pattern);
+        List<List<Pair>> pages = pairs.stream().collect(Collectors.groupingBy(s -> (pairs.indexOf(s) / perpage))).values().stream().collect(Collectors.toList());
+
+        List<D> pageData;
+        if (pages.isEmpty()) {
+            System.out.println("No hay resultados");
+            pageData = new ArrayList<D>();
+        }
+        else
+            pageData =  pages.get(page-1).stream().map(p -> new D(p.getKey(), p.getValue())).collect(Collectors.toList());
+
         QueryResponse body = new QueryResponse();
+        body.pattern = pattern;
         body.dbname = dbname;
         body.page = page;
         body.perpage = nEntries;
         body.d = pageData;
+        body.totalPages = pages.size();
         return Response.ok(body).build();
     }
+
+    
 
 
 }

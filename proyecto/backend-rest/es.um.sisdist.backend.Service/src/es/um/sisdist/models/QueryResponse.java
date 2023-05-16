@@ -12,4 +12,5 @@ public class QueryResponse {
     public int page;
     public int perpage;
     public List<D> d;
+    public int totalPages;
 }
