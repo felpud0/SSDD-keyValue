@@ -67,7 +67,7 @@ public class testCliente {
 	}*/
 	
 	
-	public void login() {
+	/*public void login() {
 		String email = "test1@test.com";
 		String password = "psswd";
 		String url = "http://localhost:8080/Service/checkLogin";
@@ -102,15 +102,7 @@ public class testCliente {
 
 			in.close();
 			
-			//assertEquals(201, responseCode);
-
-			// Manejar la respuesta del servidor
-			if (responseCode == 200) {
-				System.out.println("AAAA");
-			} else {
-				System.out.println("Server response: " + response.toString());
-
-			}
+			assertEquals(200, responseCode);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -156,19 +148,90 @@ public class testCliente {
 			}
 			in.close();
 			
-			// Manejar la respuesta del servidor
-	        if (responseCode == 200) {
-	            
-	        } else {
-	            System.out.println("Server response: " + response.toString());
-	            
-	        }
+			assertEquals(200, responseCode);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
-		
-		
 	}
+	
+	@Test	
+	public void addElementoBBDD() {
+		//login();
+		String email = "test1@test.com";
+		String nombreBBDD = "miBBDD";
+	    String key = "testKey";
+        String value = "testValue";
+		
+		String url = "http://localhost:8080/Service/u/" + email + "/db/" + nombreBBDD + "/d";
+		
+		URL obj;
+		try {
+			obj = new URL(url);
+
+			HttpURLConnection con;
+			con = (HttpURLConnection) obj.openConnection();
+
+			con.setRequestMethod("POST");
+			con.setRequestProperty("Content-Type", "application/json");
+
+			// Crear el cuerpo de la solicitud
+	        String requestBody = "{\"k\": \"" + key + "\", \"v\": \"" + value + "\"}";
+
+			// Enviar el cuerpo de la solicitud
+			con.setDoOutput(true);
+			OutputStream os = con.getOutputStream();
+			os.write(requestBody.getBytes());
+			os.flush();
+			os.close();
+
+			// Obtener la respuesta del servidor
+			int responseCode = con.getResponseCode();
+
+			// Leer la respuesta del servidor
+			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			String inputLine;
+			StringBuilder response = new StringBuilder();
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+			in.close();
+			
+			
+			assertEquals(201, responseCode);
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
+	
+	@Test	
+	public void removeElementoBBDD() {
+		//login();
+		String email = "test1@test.com";
+		String nombreBBDD = "miBBDD";
+	    String key = "testKey";
+		
+		String url = "http://localhost:8080/Service/u/" + email + "/db/" + nombreBBDD + "/d/" + key;
+
+		URL obj;
+		try {
+			obj = new URL(url);
+
+			HttpURLConnection con;
+			con = (HttpURLConnection) obj.openConnection();
+
+			con.setRequestMethod("DELETE");
+
+			// Obtener la respuesta del servidor
+			int responseCode = con.getResponseCode();
+			
+			assertEquals(204, responseCode);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}*/
 
 }
