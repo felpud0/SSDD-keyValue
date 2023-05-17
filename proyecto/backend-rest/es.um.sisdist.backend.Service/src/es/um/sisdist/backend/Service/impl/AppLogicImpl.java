@@ -254,9 +254,11 @@ public class AppLogicImpl
         //dao.updateUsr(dbOwner.get());
         // Test de grpc, puede hacerse con la BD
     	var msg = RPCMapReduceRequest.newBuilder()
-        .setMap("maptest")
-        .setReduce("reducetest")
-        .setOutDb("outdbtest")
+        .setMap(map)
+        .setReduce(reduce)
+        .setOutDb(outDB)
+        .setUser(email)
+        .setInDb(dbname)
         .build( );
         var response = blockingStub.mapReduce(msg);
         return;

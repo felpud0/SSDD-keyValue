@@ -26,4 +26,6 @@ message RPCMapReduceRequest
 	string map = 1;
 	string reduce = 2;
 	string out_db = 3;
+	string in_db = 4;
+	string user = 5;
 }
