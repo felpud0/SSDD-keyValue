@@ -183,6 +183,7 @@ def bbddSearch(id):
 @login_required
 def logout():
     logout_user()
+    users.clear()
     return redirect(url_for('index'))
 
 @login_manager.user_loader
