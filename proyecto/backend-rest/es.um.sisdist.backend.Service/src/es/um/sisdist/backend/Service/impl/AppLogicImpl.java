@@ -18,6 +18,7 @@ import com.mysql.cj.x.protobuf.MysqlxDatatypes.Array;
 
 import es.um.sisdist.backend.grpc.GrpcServiceGrpc;
 import es.um.sisdist.backend.grpc.PingRequest;
+import es.um.sisdist.backend.grpc.RPCMapReduceRequest;
 import es.um.sisdist.models.D;
 import es.um.sisdist.models.DBDTO;
 import es.um.sisdist.models.DBDTOUtils;
@@ -241,6 +242,24 @@ public class AppLogicImpl
         }
         List<Pair> pairs = dbOwner.get().queryDB(dbname, query);
         return pairs;
+    }
+
+    public void mapReduce(String email, String dbname, String map, String reduce, String outDB) {
+        Optional<User> dbOwner = getUserByEmail(email);
+        if  (dbOwner.isEmpty()) {
+            System.out.println("No existe el usuario");
+            return;
+        }
+        //dbOwner.get().mapReduce(dbname, map, reduce);
+        //dao.updateUsr(dbOwner.get());
+        // Test de grpc, puede hacerse con la BD
+    	var msg = RPCMapReduceRequest.newBuilder()
+        .setMap("maptest")
+        .setReduce("reducetest")
+        .setOutDb("outdbtest")
+        .build( );
+        var response = blockingStub.mapReduce(msg);
+        return;
     }
 
 }
