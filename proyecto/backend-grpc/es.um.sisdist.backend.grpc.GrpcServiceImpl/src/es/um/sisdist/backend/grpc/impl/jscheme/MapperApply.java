@@ -17,10 +17,10 @@ import jsint.Procedure;
  */
 public class MapperApply 
 {
-	private static Void nilfunc(SchemePair t) {return null;};
+	private static Void nilfunc(SchemePair p) {return null;};
 	
 	private String ssdd_map_function = null;
-	private Function<SchemePair,Void> emit_function = MapperApply::nilfunc;
+	private Function<SchemePair, Void> emit_function = MapperApply::nilfunc;
 	private JScheme js = null;
 	
 	private void _install_emit_map_functions()
@@ -33,15 +33,15 @@ public class MapperApply
 			{
 				SchemePair arg = (SchemePair)((SchemePair)arg0[0]).first();
 				emit_function.apply(arg);
-//				System.out.println("Key: " + arg.first() + ". Value: " +
-//						arg.second());
+				System.out.println("Key: " + arg.first() + ". Value: " +
+						arg.second());
 				return null;
 			}
 		};
 		p.setName("emit");
 		js.setGlobalValue("emit", p);
 		
-		// ssdd_map
+		// ssdd-map
 		js.load(ssdd_map_function);
 	}
 	
@@ -61,16 +61,11 @@ public class MapperApply
 		_install_emit_map_functions();
 	}
 
-	public void apply(SchemePair p)
+	public <T1, T2> void apply(T1 k, T2 v)
 	{
-		js.call("ssdd_map", p);
+		js.call("ssdd-map", k, v);
 	}
 
-	public <T1, T2> void apply(T1 e1, T2 e2)
-	{
-		apply(JScheme.list(e1,e2));
-	}
-	
 	public String getScheme_ssdd_map_function() {
 		return ssdd_map_function;
 	}
