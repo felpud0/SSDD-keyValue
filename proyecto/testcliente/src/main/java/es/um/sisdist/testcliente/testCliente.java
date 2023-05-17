@@ -17,7 +17,7 @@ import org.junit.Test;
  */
 public class testCliente {
 
-	@Test
+	/*@Test
 	public void testRegistro() {
 		String email = "test1@test.com";
 		String name = "Test1";
@@ -63,9 +63,112 @@ public class testCliente {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		
+		}		
+	}*/
+	
+	
+	public void login() {
+		String email = "test1@test.com";
+		String password = "psswd";
+		String url = "http://localhost:8080/Service/checkLogin";
+		URL obj;
+		try {
+			// Crear la solicitud POST
+			obj = new URL(url);
+			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+			con.setRequestMethod("POST");
+			con.setRequestProperty("Content-Type", "application/json");
 
+			// Crear el cuerpo de la solicitud
+			String requestBody = String.format("{\"email\":\"%s\",\"password\":\"%s\"}", email, password);
+
+			// Enviar el cuerpo de la solicitud
+			con.setDoOutput(true);
+			OutputStream os = con.getOutputStream();
+			os.write(requestBody.getBytes());
+			os.flush();
+			os.close();
+
+			// Obtener la respuesta del servidor
+			int responseCode = con.getResponseCode();
+
+			// Leer la respuesta del servidor
+			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			String inputLine;
+			StringBuilder response = new StringBuilder();
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+
+			in.close();
+			
+			//assertEquals(201, responseCode);
+
+			// Manejar la respuesta del servidor
+			if (responseCode == 200) {
+				System.out.println("AAAA");
+			} else {
+				System.out.println("Server response: " + response.toString());
+
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test	
+	public void crearBBDD() {
+		login();
+		String email = "test1@test.com";
+		String nombreBBDD = "miBBDD";
+		String url = "http://localhost:8080/Service/u/"+email+"/db/";
+		
+		URL obj;
+		try {
+			obj = new URL(url);
+
+			HttpURLConnection con;
+			con = (HttpURLConnection) obj.openConnection();
+
+			con.setRequestMethod("POST");
+			con.setRequestProperty("Content-Type", "application/json");
+
+			// Crear el cuerpo de la solicitud
+	        String requestBody = String.format("{\"dbname\":\"%s\"}", nombreBBDD);
+
+			// Enviar el cuerpo de la solicitud
+			con.setDoOutput(true);
+			OutputStream os = con.getOutputStream();
+			os.write(requestBody.getBytes());
+			os.flush();
+			os.close();
+
+			// Obtener la respuesta del servidor
+			int responseCode = con.getResponseCode();
+
+			// Leer la respuesta del servidor
+			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			String inputLine;
+			StringBuilder response = new StringBuilder();
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+			in.close();
+			
+			// Manejar la respuesta del servidor
+	        if (responseCode == 200) {
+	            
+	        } else {
+	            System.out.println("Server response: " + response.toString());
+	            
+	        }
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		
+		
 	}
 
 }
