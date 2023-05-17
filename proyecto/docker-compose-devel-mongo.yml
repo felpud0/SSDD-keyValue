@@ -27,6 +27,12 @@ services:
       - 8080:8080
     env_file: mongo.env
 
+  backend-restext:
+    build: backend-restext/restexterno/.
+    ports:
+      - 8180:8080
+    env_file: mongo.env
+
   backend-grpc:
     build: backend-grpc/es.um.sisdist.backend.grpc.GrpcServiceImpl/.
     ports:

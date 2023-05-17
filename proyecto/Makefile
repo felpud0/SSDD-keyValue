@@ -23,9 +23,12 @@ backend-grpc:
 backend-rest:
 	$(MAKE) -C $@
 
+backend-restext:
+	$(MAKE) -C $@
+
 clean:
 	for i in $(SUBDIRS); do \
 		$(MAKE) -C $$i $@; \
 	done
 
-.PHONY: all run-devel containers frontend backend backend-grpc backend-rest clean
+.PHONY: all run-devel containers frontend backend backend-grpc backend-rest backend-restext clean
