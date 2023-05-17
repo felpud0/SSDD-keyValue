@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import es.um.sisdist.backend.Service.impl.AppLogicImpl;
@@ -160,7 +161,18 @@ public class DBEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response mapReduceDB(@PathParam("username") String username, @PathParam("dbname") String dbname, MapReduceRequest mapReduceRequest) {
         System.out.println("MAP REDUCE DB: " + username + " " + dbname + " " + mapReduceRequest.toString());
-        AppLogicImpl.getInstance().mapReduce(username, dbname, mapReduceRequest.map, mapReduceRequest.reduce, mapReduceRequest.out_db);
+        String mrID =  username + "_" + dbname + "_" + mapReduceRequest.out_db + "_" + UUID.randomUUID().toString();
+        AppLogicImpl.getInstance().addMapReduce(username, dbname, mapReduceRequest.map, mapReduceRequest.reduce, mapReduceRequest.out_db, mrID);
+        //Return created with URL to the new resource
+        return Response.created(URI.create("/u/" + username + "/db/"+dbname+"/mr/"+mrID)).build();    
+    }
+
+    @GET
+    @Path("/{dbname}/mr/{mrid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMapReduce( @PathParam("username") String username, @PathParam("dbname") String dbname, @PathParam("mrid") String mrid) {
+        System.out.println("GET MAP REDUCE: " + username + " " + dbname + " " + mrid);
+        //TODO: Comprobar la MR se ha hecho
         return Response.ok().build();
     }
 

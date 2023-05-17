@@ -9,6 +9,7 @@ service GrpcService
 {
     rpc Ping(PingRequest) returns (PingResponse);
 	rpc mapReduce(RPCMapReduceRequest) returns (RPCMapReduceRequest);
+    rpc getProcessingMR(GetProcessingMRRequest) returns (GetProcessingMRResponse);
 }
 
 message PingRequest
@@ -28,4 +29,15 @@ message RPCMapReduceRequest
 	string out_db = 3;
 	string in_db = 4;
 	string user = 5;
+	string id = 6;
 }
+
+
+message GetProcessingMRRequest {
+	string user = 1;
+}
+
+message GetProcessingMRResponse {
+	repeated string processingIds = 1;
+}
+

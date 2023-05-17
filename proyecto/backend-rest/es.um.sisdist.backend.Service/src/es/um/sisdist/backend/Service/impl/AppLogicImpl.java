@@ -5,6 +5,7 @@ package es.um.sisdist.backend.Service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -16,9 +17,7 @@ import org.bson.types.ObjectId;
 
 import com.mysql.cj.x.protobuf.MysqlxDatatypes.Array;
 
-import es.um.sisdist.backend.grpc.GrpcServiceGrpc;
-import es.um.sisdist.backend.grpc.PingRequest;
-import es.um.sisdist.backend.grpc.RPCMapReduceRequest;
+import es.um.sisdist.backend.grpc.*;
 import es.um.sisdist.models.D;
 import es.um.sisdist.models.DBDTO;
 import es.um.sisdist.models.DBDTOUtils;
@@ -33,6 +32,7 @@ import es.um.sisdist.backend.dao.models.utils.UserUtils;
 import es.um.sisdist.backend.dao.user.IUserDAO;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.stub.StreamObserver;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -49,7 +49,8 @@ public class AppLogicImpl
 
     private final ManagedChannel channel;
     private final GrpcServiceGrpc.GrpcServiceBlockingStub blockingStub;
-    //private final GrpcServiceGrpc.GrpcServiceStub asyncStub;
+    private final GrpcServiceGrpc.GrpcServiceStub asyncStub;
+    private HashSet<String> mrInCourse;
 
     static AppLogicImpl instance = new AppLogicImpl();
 
@@ -72,6 +73,8 @@ public class AppLogicImpl
                 // to avoid needing certificates.
                 .usePlaintext().build();
         blockingStub = GrpcServiceGrpc.newBlockingStub(channel);
+        asyncStub = GrpcServiceGrpc.newStub(channel);
+        mrInCourse = new HashSet<String>();
 
     }
 
@@ -244,7 +247,7 @@ public class AppLogicImpl
         return pairs;
     }
 
-    public void mapReduce(String email, String dbname, String map, String reduce, String outDB) {
+    public void addMapReduce(String email, String dbname, String map, String reduce, String outDB, String mrID) {
         Optional<User> dbOwner = getUserByEmail(email);
         if  (dbOwner.isEmpty()) {
             System.out.println("No existe el usuario");
@@ -260,8 +263,35 @@ public class AppLogicImpl
         .setUser(email)
         .setInDb(dbname)
         .build( );
+        asyncStub.mapReduce(msg, new StreamObserver<RPCMapReduceRequest>() {
+            @Override
+            public void onNext(RPCMapReduceRequest value) {
+
+            }
+
+            @Override
+            public void onError(Throwable t) {
+
+            }
+
+            @Override
+            public void onCompleted() {
+
+            }
+            
+        });
         var response = blockingStub.mapReduce(msg);
         return;
+    }
+
+    public List<String> getMapReduce(String email, String mrID) {
+        Optional<User> dbOwner = getUserByEmail(email);
+        if  (dbOwner.isEmpty()) {
+            System.out.println("No existe el usuario");
+            return null;
+        }
+        
+        return blockingStub.getProcessingMR(GetProcessingMRRequest.newBuilder().setUser(email).build()).getProcessingIdsList();
     }
 
 }

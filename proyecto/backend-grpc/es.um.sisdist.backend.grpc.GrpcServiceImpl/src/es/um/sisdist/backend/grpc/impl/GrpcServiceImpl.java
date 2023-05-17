@@ -2,9 +2,15 @@ package es.um.sisdist.backend.grpc.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 
 import es.um.sisdist.backend.dao.DAOFactoryImpl;
@@ -12,10 +18,7 @@ import es.um.sisdist.backend.dao.IDAOFactory;
 import es.um.sisdist.backend.dao.models.*;
 import es.um.sisdist.backend.dao.user.IUserDAO;
 import es.um.sisdist.backend.dao.user.MongoUserDAO;
-import es.um.sisdist.backend.grpc.GrpcServiceGrpc;
-import es.um.sisdist.backend.grpc.PingRequest;
-import es.um.sisdist.backend.grpc.PingResponse;
-import es.um.sisdist.backend.grpc.RPCMapReduceRequest;
+import es.um.sisdist.backend.grpc.*;
 import es.um.sisdist.backend.grpc.impl.jscheme.JSchemeProvider;
 import es.um.sisdist.backend.grpc.impl.jscheme.MapReduceApply;
 import io.grpc.stub.StreamObserver;
@@ -25,9 +28,13 @@ import jscheme.SchemePair;
 class GrpcServiceImpl extends GrpcServiceGrpc.GrpcServiceImplBase 
 {
 	private Logger logger;
-	IDAOFactory daoFactory;
-    IUserDAO dao;
-	
+	private IDAOFactory daoFactory;
+    private IUserDAO dao;
+
+	//Create a lock
+	private final ReentrantLock lock = new ReentrantLock();
+	Map<String,Set<String>> inCourse;
+
     public GrpcServiceImpl(Logger logger) 
     {
 		super();
@@ -39,6 +46,7 @@ class GrpcServiceImpl extends GrpcServiceGrpc.GrpcServiceImplBase
             dao = daoFactory.createMongoUserDAO();
         else
             dao = daoFactory.createSQLUserDAO();
+		inCourse = new ConcurrentHashMap<>();
 	}
 
 	@Override
@@ -53,6 +61,17 @@ class GrpcServiceImpl extends GrpcServiceGrpc.GrpcServiceImplBase
 	public void mapReduce(RPCMapReduceRequest mrRequest, StreamObserver<RPCMapReduceRequest> responseObserver) 
 	{
 		logger.info("Recived PING request, value = " + mrRequest.getMap());
+		String mrID = mrRequest.getId();
+		
+		lock.lock();
+		Set<String> userInCourse = inCourse.get(mrRequest.getUser());
+		if  (userInCourse == null) {
+			userInCourse = new HashSet<String>();
+			inCourse.put(mrRequest.getUser(), userInCourse);
+		}
+		userInCourse.add(mrID);
+		lock.unlock();
+		
 		logger.info("Iniciando js...");
 		JScheme jsc= JSchemeProvider.js();
 		logger.info("Iniciando MRA...");
@@ -100,11 +119,27 @@ class GrpcServiceImpl extends GrpcServiceGrpc.GrpcServiceImplBase
 		user.addDB(new DB(mrRequest.getOutDb(), pairResult));
 		dao.updateUsr(user);
 
+		lock.lock();
+		inCourse.remove(mrID);
+		lock.unlock();
+
 		responseObserver.onNext(RPCMapReduceRequest.newBuilder().setMap(mrRequest.getMap()).build());
 		responseObserver.onCompleted();
 	}
 
-
+	@Override
+	public void getProcessingMR( GetProcessingMRRequest request, StreamObserver<GetProcessingMRResponse> responseObserver) 
+	{
+		logger.info("Recived PING request, value = " + request.getUser());
+		lock.lock();
+		Set<String> userInCourse = inCourse.get(request.getUser());
+		lock.unlock();
+		if  (userInCourse == null) {
+			userInCourse = new HashSet<String>();
+		}
+		responseObserver.onNext(GetProcessingMRResponse.newBuilder().addAllProcessingIds(userInCourse).build());
+		responseObserver.onCompleted();
+	}
 /*
 	@Override
 	public void storeImage(ImageData request, StreamObserver<Empty> responseObserver)
