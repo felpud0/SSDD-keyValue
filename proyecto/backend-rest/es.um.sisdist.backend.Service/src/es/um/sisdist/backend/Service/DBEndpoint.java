@@ -12,6 +12,7 @@ import es.um.sisdist.backend.dao.models.User;
 import es.um.sisdist.models.D;
 import es.um.sisdist.models.DBDTO;
 import es.um.sisdist.models.DBDTOUtils;
+import es.um.sisdist.models.MapReduceRequest;
 import es.um.sisdist.models.QueryResponse;
 import es.um.sisdist.models.UserDTO;
 import es.um.sisdist.models.UserDTOUtils;
@@ -151,6 +152,16 @@ public class DBEndpoint {
         body.d = pageData;
         body.totalPages = pages.size();
         return Response.ok(body).build();
+    }
+
+    @POST
+    @Path("/{dbname}/mr")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response mapReduceDB(@PathParam("username") String username, @PathParam("dbname") String dbname, MapReduceRequest mapReduceRequest) {
+        System.out.println("MAP REDUCE DB: " + username + " " + dbname + " " + mapReduceRequest.toString());
+        AppLogicImpl.getInstance().mapReduce(username, dbname, mapReduceRequest.map, mapReduceRequest.reduce, mapReduceRequest.out_db);
+        return Response.ok().build();
     }
 
     
