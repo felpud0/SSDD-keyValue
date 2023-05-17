@@ -101,7 +101,7 @@ def bbdd():
     bdid = request.form['bdid']
     respuesta = addDB(current_user.email, bdid)
     if respuesta.status_code != 201:
-        flash("Error al añadir la base de datos <"+bdid+">: " + respuesta.status_code)
+        flash("Error al añadir la base de datos <"+bdid+">: " + str(respuesta.status_code))
     else:
         flash("Base de datos <"+bdid+"> añadida con éxito")
     return redirect(url_for('bbdd'))
