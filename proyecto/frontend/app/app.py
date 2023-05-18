@@ -66,8 +66,8 @@ def signup():
     passw = form.password.data
 
     if not sendSignUp(email, name, passw):
-        error = "Error al registrarse no signup"
-        app.logger.info(error)
+        error = "Error al registrarse"
+        #app.logger.info(error)
         flash(error)
         return render_template('signup.html', form=form, error=error)
 
@@ -238,9 +238,6 @@ def sendSignUp(email, name, password):
     # Manejo de respuestas del backend
     if respuesta.status_code == 201:
         return True
-    else:
-        # Otro error
-        flash("Error al registrarse")
     return False
 
 

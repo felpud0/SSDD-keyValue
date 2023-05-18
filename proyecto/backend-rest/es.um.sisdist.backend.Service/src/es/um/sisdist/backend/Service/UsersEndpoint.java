@@ -36,8 +36,16 @@ public class UsersEndpoint
             return Response.status(Status.BAD_REQUEST).entity("No puede haber campos vacios").build();
         }
         System.out.println("ID: "+ uo.getId() +"EL CORREO: "+uo.getEmail()+" EL NOMBRE: "+uo.getName()+" LA CONTRASEÑA: "+uo.getPassword()); 
-        User u = impl.register(uo);
-        return Response.status(Status.CREATED).entity(uo).build();
+
+        if (impl.getUserByEmail(uo.getEmail()).isEmpty()) {
+        	User u = impl.register(uo);
+        	System.out.println("A");
+            return Response.status(Status.CREATED).entity(uo).build();
+        }
+        
+        return Response.status(Status.FORBIDDEN).entity(uo).build();
+
+        
     }
 
     @GET
