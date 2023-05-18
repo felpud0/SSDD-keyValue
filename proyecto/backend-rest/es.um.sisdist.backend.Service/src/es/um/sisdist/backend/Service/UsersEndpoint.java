@@ -1,8 +1,5 @@
 package es.um.sisdist.backend.Service;
 
-import java.util.Optional;
-
-
 import es.um.sisdist.backend.Service.impl.AppLogicImpl;
 import es.um.sisdist.backend.dao.models.User;
 import es.um.sisdist.models.UserDTO;

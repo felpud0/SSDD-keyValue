@@ -1,6 +1,5 @@
 package es.um.sisdist.models;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.xml.bind.annotation.XmlRootElement;

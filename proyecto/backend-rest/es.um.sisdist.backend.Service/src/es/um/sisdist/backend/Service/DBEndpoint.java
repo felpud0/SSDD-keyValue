@@ -9,14 +9,11 @@ import java.util.stream.Collectors;
 
 import es.um.sisdist.backend.Service.impl.AppLogicImpl;
 import es.um.sisdist.backend.dao.models.Pair;
-import es.um.sisdist.backend.dao.models.User;
 import es.um.sisdist.models.D;
 import es.um.sisdist.models.DBDTO;
 import es.um.sisdist.models.DBDTOUtils;
 import es.um.sisdist.models.MapReduceRequest;
 import es.um.sisdist.models.QueryResponse;
-import es.um.sisdist.models.UserDTO;
-import es.um.sisdist.models.UserDTOUtils;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;

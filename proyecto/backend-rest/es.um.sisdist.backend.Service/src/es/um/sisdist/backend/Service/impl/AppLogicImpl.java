@@ -4,18 +4,12 @@
 package es.um.sisdist.backend.Service.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import org.bson.types.ObjectId;
-
-import com.mysql.cj.x.protobuf.MysqlxDatatypes.Array;
 
 import es.um.sisdist.backend.grpc.*;
 import es.um.sisdist.models.D;
@@ -33,8 +27,6 @@ import es.um.sisdist.backend.dao.user.IUserDAO;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 
 /**
  * @author dsevilla

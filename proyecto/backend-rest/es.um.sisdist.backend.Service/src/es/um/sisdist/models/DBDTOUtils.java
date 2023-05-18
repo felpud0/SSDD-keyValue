@@ -1,7 +1,6 @@
 package es.um.sisdist.models;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import es.um.sisdist.backend.dao.models.DB;

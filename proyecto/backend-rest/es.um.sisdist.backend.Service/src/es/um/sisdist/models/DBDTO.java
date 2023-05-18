@@ -1,7 +1,6 @@
 package es.um.sisdist.models;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
