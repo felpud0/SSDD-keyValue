@@ -5,6 +5,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
+@Path("/api")
 public class AccesibleEndpoint {
 
     @GET
@@ -14,5 +15,4 @@ public class AccesibleEndpoint {
         return "Test";
     }
 
-    
 }

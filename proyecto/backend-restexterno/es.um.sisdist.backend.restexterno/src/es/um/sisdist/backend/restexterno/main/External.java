@@ -8,12 +8,6 @@ import jakarta.ws.rs.core.MediaType;
 
 @ApplicationPath("/")
 public class External extends Application {
-
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String test() {
-        return "Test";
-    }
-    
+   
     
 }
