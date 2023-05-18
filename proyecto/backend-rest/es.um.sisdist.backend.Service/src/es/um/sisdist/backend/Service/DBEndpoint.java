@@ -149,7 +149,7 @@ public class DBEndpoint {
         List<List<Pair>> pages = pairs.stream().collect(Collectors.groupingBy(s -> (pairs.indexOf(s) / perpage))).values().stream().collect(Collectors.toList());
 
         List<D> pageData;
-        if (pages.isBlank()) {
+        if (pages.isEmpty()) {
             System.out.println("No hay resultados");
             pageData = new ArrayList<D>();
         }
