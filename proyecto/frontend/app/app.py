@@ -175,7 +175,10 @@ def bbddSearch(id):
         flash("Error al buscar <"+query+">")
         return redirect(url_for('bbddSearch', id=id))
     else:
-        flash("Claves con <"+query+"> encontrado con éxito")
+        if (query == ''):
+            flash("Mostrando todas las claves")
+        else:
+            flash("Claves con <"+query+"> encontrado con éxito")
     respuestaJ = respuesta.json()
     return render_template('bbddSearch.html', searchResponse=respuestaJ )
 
