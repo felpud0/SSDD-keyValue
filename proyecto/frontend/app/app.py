@@ -182,8 +182,10 @@ def bbddSearch(id):
 @app.route('/logout')
 @login_required
 def logout():
+    email = current_user.email if current_user.is_authenticated else 'anonymous'
     logout_user()
     users.clear()
+    flash("Session for user <"+ email +"> closed successfully")
     return redirect(url_for('index'))
 
 @login_manager.user_loader
