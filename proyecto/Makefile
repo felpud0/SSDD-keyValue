@@ -1,5 +1,5 @@
 #! /usr/bin/env make -f
-SUBDIRS = frontend backend backend-grpc backend-rest backend-restext
+SUBDIRS = frontend backend backend-grpc backend-rest backend-restexterno
 
 all: $(SUBDIRS)
 
@@ -23,7 +23,7 @@ backend-grpc:
 backend-rest:
 	$(MAKE) -C $@
 
-backend-restext:
+backend-restexterno:
 	$(MAKE) -C $@
 
 clean:
