@@ -13,8 +13,6 @@ import jakarta.ws.rs.ext.Provider;
 @Provider
 public class AuthFilter  implements ContainerRequestFilter{
 
-    private static final String AUTHENTICATION_SCHEME = "Bearer";
-    private static final String AUTHENTICATION_TOKEN = "YOUR_AUTHENTICATION_TOKEN";
 
     @Override
     public void filter(ContainerRequestContext requestContext) {
@@ -35,26 +33,11 @@ public class AuthFilter  implements ContainerRequestFilter{
         }
 
         User user = oUser.get();
+        boolean check = ExternalServiceImpl.getInstance().checkAuthToken(authTokenHeader, user, dateHeader, requestContext.getUriInfo().getPath());
 
-        // Verifica si el token de autenticación es válido
-        
-
-
-        // Obtén el encabezado de autorización de la solicitud
-        String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
-
-        // Verifica si el encabezado de autorización está presente y tiene el formato correcto
-        if (authorizationHeader == null || !authorizationHeader.startsWith(AUTHENTICATION_SCHEME)) {
+        if (!check) {
             requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
             return;
-        }
-
-        // Extrae el token de autenticación del encabezado
-        String token = authorizationHeader.substring(AUTHENTICATION_SCHEME.length()).trim();
-
-        // Verifica si el token de autenticación es válido
-        if (!token.equals(AUTHENTICATION_TOKEN)) {
-            requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
         }
     }
 
