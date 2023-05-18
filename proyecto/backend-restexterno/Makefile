@@ -1,4 +1,4 @@
-backend-rest:
+backend-restexterno:
 	(cd es.um.sisdist.backend.restexterno \
 		&& mvn -DskipTests clean package)
 
