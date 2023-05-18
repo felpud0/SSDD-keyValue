@@ -31,9 +31,10 @@ public class AuthFilter  implements ContainerRequestFilter{
             requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
             return;
         }
-
+        // Get full url of the request
+        String url = requestContext.getUriInfo().getAbsolutePath().toString();
         User user = oUser.get();
-        boolean check = ExternalServiceImpl.getInstance().checkAuthToken(authTokenHeader, user, dateHeader, requestContext.getUriInfo().getPath());
+        boolean check = ExternalServiceImpl.getInstance().checkAuthToken(authTokenHeader, user, dateHeader, url);
 
         if (!check) {
             requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
