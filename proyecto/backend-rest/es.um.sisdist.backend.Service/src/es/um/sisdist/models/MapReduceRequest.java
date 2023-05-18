@@ -9,4 +9,9 @@ public class MapReduceRequest {
     public String reduce;
     public String out_db;
 
+    @Override
+    public String toString() {
+        return "MapReduceRequest [map=" + map + ", out_db=" + out_db + ", reduce=" + reduce + "]";
+    }
+
 }

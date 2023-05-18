@@ -164,7 +164,7 @@ public class DBEndpoint {
         String mrID =  username + "_" + dbname + "_" + mapReduceRequest.out_db + "_" + UUID.randomUUID().toString();
         AppLogicImpl.getInstance().addMapReduce(username, dbname, mapReduceRequest.map, mapReduceRequest.reduce, mapReduceRequest.out_db, mrID);
         //Return created with URL to the new resource
-        return Response.created(URI.create("/u/" + username + "/db/"+dbname+"/mr/"+mrID)).build();    
+        return Response.accepted().location(URI.create("/u/" + username + "/db/"+dbname+"/mr/"+mrID)).build();    
     }
 
     @GET

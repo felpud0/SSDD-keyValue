@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container" style="text-align: center; margin-top: 50px;">
+    <h1>Realizar Map-Reduce sobre la base de datos {{ bbdd }}</h1>
+    <form action=" {{ url_for('submitMR', id=bbdd) }} " method="post" style="display: flex;flex-direction: column;flex-wrap: nowrap;align-items: center;">
+        Nombre de la BD destino:
+        <input type="text" name="out-db" placeholder="Nombre de la BD destino">
+        Instruccion Map para el Map-Reduce:
+        <textarea name="map" rows="10" cols="50"></textarea>
+        Instruccion Reduce para el Map-Reduce:
+        <textarea name="reduce" rows="10" cols="50"></textarea>   
+        <input type="submit" value="Crear">
+    </form>
+</div>
+{% endblock %}

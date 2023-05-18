@@ -283,7 +283,7 @@ public class AppLogicImpl
             }
             
         });
-        var response = blockingStub.mapReduce(msg);
+        //var response = blockingStub.mapReduce(msg);
         return;
     }
 

@@ -179,6 +179,21 @@ def bbddSearch(id):
     respuestaJ = respuesta.json()
     return render_template('bbddSearch.html', searchResponse=respuestaJ )
 
+@app.route('/bbdd/<id>/mr' , methods=['GET', 'POST'])
+@login_required
+def submitMR(id):
+    if request.method == 'GET':
+        return render_template('submitMR.html', bbdd=id)
+    map = request.form['map']
+    reduce = request.form['reduce']
+    outdb = request.form['out-db']
+    respuesta = addMR(current_user.email, id, map, reduce, outdb)
+    if respuesta.status_code != 202:
+        flash("Error al añadir el MR")
+    else:
+        flash("MR añadido con éxito, se guardara en la base de datos <"+outdb+">")
+    return redirect(url_for('bbdd'))
+
 @app.route('/logout')
 @login_required
 def logout():
@@ -268,6 +283,12 @@ def addPair(email, db, key, value):
 def searchPair(email, db, query, page='1', perpage='5'):
     respuesta = requests.get('http://backend-rest:8080/Service/u/'+email+'/db/'+db+'/q?pattern='+query+'&page='+page+'&perpage='+perpage)
     return respuesta
+
+def addMR(email, db, map, reduce, outdb):
+    data = {"map": map, "reduce": reduce, "out_db": outdb}
+    respuesta = requests.post('http://backend-rest:8080/Service/u/'+email+'/db/'+db+'/mr', json=data)
+    return respuesta
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
