@@ -30,7 +30,7 @@ services:
   backend-restexterno:
     build: backend-restexterno/es.um.sisdist.backend.restexterno/.
     ports:
-      - 8280:8280
+      - 8180:8180
     env_file: mongo.env
 
   backend-grpc:
