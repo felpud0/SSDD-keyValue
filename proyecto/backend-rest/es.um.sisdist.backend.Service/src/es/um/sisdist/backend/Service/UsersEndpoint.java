@@ -32,6 +32,9 @@ public class UsersEndpoint
     @Produces(MediaType.APPLICATION_JSON)
     public Response registerUser(UserDTO uo) 
     {
+        if (uo.getEmail() == null || uo.getEmail().isBlank()|| uo.getPassword() == null || uo.getPassword().isBlank() || uo.getName() == null || uo.getName().isBlank()) {
+            return Response.status(Status.BAD_REQUEST).entity("No puede haber campos vacios").build();
+        }
         System.out.println("ID: "+ uo.getId() +"EL CORREO: "+uo.getEmail()+" EL NOMBRE: "+uo.getName()+" LA CONTRASEÑA: "+uo.getPassword()); 
         User u = impl.register(uo);
         return Response.status(Status.CREATED).entity(uo).build();

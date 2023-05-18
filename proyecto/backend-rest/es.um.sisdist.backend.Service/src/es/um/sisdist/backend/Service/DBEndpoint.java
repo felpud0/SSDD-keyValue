@@ -40,6 +40,9 @@ public class DBEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createDB(@PathParam("username") String username, DBDTO keyValues) {
         System.out.println(keyValues.toString());
+        if (keyValues.getDbname() == null || keyValues.getDbname().isBlank()) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
         AppLogicImpl.getInstance().addDB(username, keyValues);
         URI uri = URI.create("/u/" + username + "/db/"+keyValues.getDbname());
         return Response.created(uri).entity(keyValues).build();
@@ -70,6 +73,9 @@ public class DBEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateDB(@PathParam("username") String username, @PathParam("dbname") String dbname, DBDTO keyValues) {
         System.out.println("UPDATE DB: " + username + " " + dbname);
+        if (keyValues.getDbname() == null || keyValues.getDbname().isBlank()) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("DB name cannot be empty").build();
+        }
         if (AppLogicImpl.getInstance().updateDB(username, dbname, keyValues) ){
             return Response.noContent().build();
         } else {
@@ -89,6 +95,9 @@ public class DBEndpoint {
     @Path("/{dbname}/d/{key}")
     public Response updateDBKey(@PathParam("username") String username, @PathParam("dbname") String dbname, @PathParam("key") String key, @QueryParam("v") String value) {
         System.out.println("UPDATE DB KEY: " + username + " " + dbname + " " + key + " " + value);
+        if (key == null || key.isBlank() || value == null || value.isBlank()) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Key or value cannot be empty").build();
+        }
         if (AppLogicImpl.getInstance().updateKeyValue(username, dbname, key, value) ){
             return Response.noContent().build();
         } else {
@@ -112,6 +121,11 @@ public class DBEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createDBKey(@PathParam("username") String username, @PathParam("dbname") String dbname, Map<String, String> keyValues) {
         System.out.println("CREATE DB KEY: " + username + " " + dbname + " " + keyValues.toString());
+
+        if (keyValues.get("k") == null || keyValues.get("k").isBlank() || keyValues.get("v") == null || keyValues.get("v").isBlank()) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Key or value cannot be empty").build();
+        }
+
         if (AppLogicImpl.getInstance().addKeyValue(username, dbname, keyValues.get("k"), keyValues.get("v")) ){
             //Return created with URL to the new resource
             URI uri = URI.create("/u/" + username + "/db/"+dbname+"/d/"+keyValues.get("k"));
@@ -135,7 +149,7 @@ public class DBEndpoint {
         List<List<Pair>> pages = pairs.stream().collect(Collectors.groupingBy(s -> (pairs.indexOf(s) / perpage))).values().stream().collect(Collectors.toList());
 
         List<D> pageData;
-        if (pages.isEmpty()) {
+        if (pages.isBlank()) {
             System.out.println("No hay resultados");
             pageData = new ArrayList<D>();
         }
@@ -158,6 +172,9 @@ public class DBEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response mapReduceDB(@PathParam("username") String username, @PathParam("dbname") String dbname, MapReduceRequest mapReduceRequest) {
         System.out.println("MAP REDUCE DB: " + username + " " + dbname + " " + mapReduceRequest.toString());
+        if (mapReduceRequest.out_db == null || mapReduceRequest.out_db.isBlank()) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("out_db cannot be empty").build();
+        }
         String mrID =  username + "_" + dbname + "_" + mapReduceRequest.out_db + "_" + UUID.randomUUID().toString();
         AppLogicImpl.getInstance().addMapReduce(username, dbname, mapReduceRequest.map, mapReduceRequest.reduce, mapReduceRequest.out_db, mrID);
         //Return created with URL to the new resource
