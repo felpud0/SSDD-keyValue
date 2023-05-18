@@ -128,6 +128,10 @@ public class User
     {
         this.visits = visits;
     }
+    
+    public void addVisits() {
+    	this.visits++;
+    }
 
     public List<DB> getDbs()
     {

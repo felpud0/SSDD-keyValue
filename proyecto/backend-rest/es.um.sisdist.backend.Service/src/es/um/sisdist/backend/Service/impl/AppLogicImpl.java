@@ -116,8 +116,11 @@ public class AppLogicImpl
         if (u.isPresent())
         {
             String hashed_pass = UserUtils.md5pass(pass);
-            if (0 == hashed_pass.compareTo(u.get().getPassword_hash()))
-                return u;
+            if (0 == hashed_pass.compareTo(u.get().getPassword_hash())) {
+            	u.get().addVisits();
+            	dao.updateUsr(u.get());
+            	return u;
+            }
         }
 
         return Optional.empty();
