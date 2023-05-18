@@ -125,7 +125,7 @@ public class AppLogicImpl
         registered.setEmail(userDTO.getEmail());
         registered.setName(userDTO.getName());
         registered.setPassword_hash(UserUtils.md5pass(userDTO.getPassword()));
-        registered.setToken("token");
+        registered.setToken(UserUtils.md5pass((userDTO.getName()+userDTO.getEmail())));
         registered.setVisits(0);
         registered.setUid(UserUtils.md5pass(registered.getEmail()));
 

@@ -91,7 +91,7 @@ public class MongoUserDAO implements IUserDAO
 			imprimir();
 		}catch (Exception e) {
 			
-			System.out.println("AQUÍ PETO");
+			//System.out.println("AQUÍ PETO");
 			System.out.println(e);
 			imprimir();
 		}

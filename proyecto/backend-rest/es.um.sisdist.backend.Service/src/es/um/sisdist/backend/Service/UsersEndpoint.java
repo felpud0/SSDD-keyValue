@@ -39,7 +39,7 @@ public class UsersEndpoint
 
         if (impl.getUserByEmail(uo.getEmail()).isEmpty()) {
         	User u = impl.register(uo);
-        	System.out.println("A");
+        	//System.out.println("A");
             return Response.status(Status.CREATED).entity(uo).build();
         }
         
