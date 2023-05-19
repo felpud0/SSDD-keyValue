@@ -96,7 +96,8 @@ def profile():
 def bbdd():
     if request.method == 'GET':
         bbdds = getUserInfo(current_user.email)['dbs']
-        return render_template('bbdd.html', bbdds=bbdds)
+        mrH = processingMRs (current_user.email).json()
+        return render_template('bbdd.html', bbdds=bbdds, mrHistorial=mrH)
     
     bdid = request.form['bdid']
     respuesta = addDB(current_user.email, bdid)
@@ -287,6 +288,10 @@ def searchPair(email, db, query, page='1', perpage='5'):
 def addMR(email, db, map, reduce, outdb):
     data = {"map": map, "reduce": reduce, "out_db": outdb}
     respuesta = requests.post('http://backend-rest:8080/Service/u/'+email+'/db/'+db+'/mr', json=data)
+    return respuesta
+
+def processingMRs(email):
+    respuesta = requests.get('http://backend-rest:8080/Service/u/'+email+'/processingMR')
     return respuesta
 
 

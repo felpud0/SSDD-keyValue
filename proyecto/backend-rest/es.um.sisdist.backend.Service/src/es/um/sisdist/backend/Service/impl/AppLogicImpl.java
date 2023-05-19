@@ -290,6 +290,13 @@ public class AppLogicImpl
         .setUser(mrProducer.getEmail()).build())
         .getProcessingIdsList().contains(mrID);    
     }
+
+    public List<String> getProcessingMR(User mrProducer) {
+        return blockingStub
+        .getProcessingMR(GetProcessingMRRequest.newBuilder()
+        .setUser(mrProducer.getEmail()).build())
+        .getProcessingIdsList();
+    }
     
 
 
