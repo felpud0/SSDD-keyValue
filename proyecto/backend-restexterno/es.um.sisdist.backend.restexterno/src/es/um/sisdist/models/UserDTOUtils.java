@@ -21,7 +21,7 @@ public class UserDTOUtils
         List<DB> dbs = new ArrayList<DB>(); 
         udto.getDbs().forEach((db) -> dbs.add(DBDTOUtils.fromDTO(db)));
         return new User(udto.getId(),udto.getEmail(), udto.getPassword(), udto.getName(), udto.getToken(),
-                udto.getVisits(), dbs);
+                udto.getVisits(), dbs, udto.getMrHistory());
     }
 
     public static UserDTO toDTO(User u)
@@ -30,6 +30,6 @@ public class UserDTOUtils
         List<DBDTO> dbs = new ArrayList<DBDTO>();
         u.getDbs().forEach((db) -> dbs.add(DBDTOUtils.toDTO(db)));
         return new UserDTO(u.getUid(), u.getEmail(), "", // Password never is returned back
-                u.getName(), u.getToken(), u.getVisits(), dbs);
+                u.getName(), u.getToken(), u.getVisits(), dbs, u.getMRHistory()) ;
     }
 }

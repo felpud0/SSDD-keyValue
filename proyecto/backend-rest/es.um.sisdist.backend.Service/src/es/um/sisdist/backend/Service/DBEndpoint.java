@@ -4,11 +4,13 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import es.um.sisdist.backend.Service.impl.AppLogicImpl;
 import es.um.sisdist.backend.dao.models.Pair;
+import es.um.sisdist.backend.dao.models.User;
 import es.um.sisdist.backend.grpc.GrpcServiceGrpc;
 import es.um.sisdist.models.D;
 import es.um.sisdist.models.DBDTO;
@@ -190,13 +192,20 @@ public class DBEndpoint {
         //TODO: Comprobar la MR se ha hecho 
         // Llamo a GRPC funcion de getProcessingMR y comprobar que el id que viene en el GET que no esté ahí, si no está ahi´--> Realizada, si no, 20x no ocntent
         
-        
-        if (AppLogicImpl.getInstance().asynchronusMR(mrid, username))
-        	return Response.ok().build();
-        else
-        	return Response.status(Status.NO_CONTENT).build();
-        
-        
+        Optional<User> user = AppLogicImpl.getInstance().getUserByEmail(username);
+        if (user.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).entity("User not found").build();
+        }
+
+        if (AppLogicImpl.getInstance().isMapReduceFinished(user.get(),mrid))
+            return Response.ok().build();
+
+        if (AppLogicImpl.getInstance().isMapReduceProcessing(user.get(),mrid))
+            return Response.status(Status.NO_CONTENT).build();
+
+        System.out.println("No está procesando ni terminado");
+        return Response.status(Status.NOT_FOUND).build();
+
     }
 
     

@@ -17,6 +17,7 @@ public class UserDTO
     private int visits;
 
     private List<DBDTO> dbs;
+    private List<String> mrHistory;
 
     /**
      * @return the id
@@ -124,7 +125,17 @@ public class UserDTO
         this.dbs = dbs;
     }
 
-    public UserDTO(String id, String email, String password, String name, String tOKEN, int visits, List<DBDTO> dbs)
+    public List<String> getMrHistory()
+    {
+        return mrHistory;
+    }
+
+    public void setMrHistory(List<String> mrHistory)
+    {
+        this.mrHistory = mrHistory;
+    }
+
+    public UserDTO(String id, String email, String password, String name, String tOKEN, int visits, List<DBDTO> dbs, List<String> mrHistory)
     {
         super();
         this.id = id;
@@ -134,6 +145,7 @@ public class UserDTO
         token = tOKEN;
         this.visits = visits;
         this.dbs = dbs;
+        this.mrHistory = mrHistory;
     }
 
     public UserDTO()

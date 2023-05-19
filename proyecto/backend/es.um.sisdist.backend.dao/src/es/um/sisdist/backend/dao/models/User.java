@@ -33,6 +33,8 @@ public class User
 
     private List<DB> dbs;
 
+    private List<String> mrHistory;
+
     /**
      * @return the id
      */
@@ -193,14 +195,35 @@ public class User
     {
         return getDB(dbName).orElseThrow().query(pattern);
     }
+
+    public List<String> getMRHistory()
+    {
+        return mrHistory;
+    }
+
+    public void setMRHistory(List<String> mrHistory)
+    {
+        this.mrHistory = mrHistory;
+    }
+
+    public boolean isInMRHistory(String mrId)
+    {
+        return mrHistory.contains(mrId);
+    }
+
+    public void addToMRHistory(String mrId)
+    {
+        mrHistory.add(mrId);
+    }
+
     
     public User(String email, String password_hash, String name, String tOKEN, int visits, List<DB> dbs)
     {
-        this(email, email, password_hash, name, tOKEN, visits, dbs);
+        this(email, email, password_hash, name, tOKEN, visits, dbs, new ArrayList<>());
         this.uid = UserUtils.md5pass(email);
     }
 
-    public User(String uid, String email, String password_hash, String name, String tOKEN, int visits, List<DB> dbs)
+    public User(String uid, String email, String password_hash, String name, String tOKEN, int visits, List<DB> dbs, List<String> mrHistory)
     {
         this.uid = uid;
         this.email = email;
@@ -209,6 +232,7 @@ public class User
         token = tOKEN;
         this.visits = visits;
         this.dbs = dbs;
+        this.mrHistory = mrHistory;
     }
 
     @Override

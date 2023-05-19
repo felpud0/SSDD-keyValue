@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
@@ -71,62 +72,90 @@ class GrpcServiceImpl extends GrpcServiceGrpc.GrpcServiceImplBase
 		}
 		userInCourse.add(mrID);
 		lock.unlock();
-		
-		logger.info("Iniciando js...");
-		
-		
-		JScheme jsc= JSchemeProvider.js();
-		logger.info("Iniciando MRA...");
-		// Mapper
-		MapReduceApply mra = new MapReduceApply(jsc, mrRequest.getMap(), mrRequest.getReduce());		
-		logger.info("Buscando...");
-		Optional<User> userO =dao.getUserByEmail(mrRequest.getUser());
-		if (!userO.isPresent())
-		{
-			logger.info("User not found: "+ mrRequest.getUser());
+
+		//Make other thread to do this async
+		// Crear CompletableFuture para ejecutar el proceso de mapReduce de forma asíncrona
+		CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+			// Código del mapReduce
+			// ...		
+			logger.info("Iniciando js...");
+			//Sleep 5 secs
+			try {
+				Thread.sleep(10000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+			JScheme jsc= JSchemeProvider.js();
+			logger.info("Iniciando MRA...");
+			// Mapper
+			MapReduceApply mra = new MapReduceApply(jsc, mrRequest.getMap(), mrRequest.getReduce());		
+			logger.info("Buscando...");
+			Optional<User> userO =dao.getUserByEmail(mrRequest.getUser());
+			if (!userO.isPresent())
+			{
+				logger.info("User not found: "+ mrRequest.getUser());
+				responseObserver.onNext(RPCMapReduceRequest.newBuilder().setMap(mrRequest.getMap()).build());
+				responseObserver.onCompleted();
+				return;
+			}
+			User user = userO.get();
+			Optional <DB> db = user.getDB(mrRequest.getInDb());
+			if (!db.isPresent())
+			{
+				logger.info("DB not found: "+ mrRequest.getInDb());
+				responseObserver.onCompleted();
+				return;
+			}
+
+			List<Pair> values = db.get().getTables();
+
+			List<SchemePair> schameValues = new ArrayList<>();
+
+
+			//Aply values to with mra
+			logger.info("A transformar...");
+
+			values.stream().forEach(pair -> schameValues.add(JScheme.list(pair.getKey(),pair.getValue())));
+			schameValues.stream().forEach(pair -> mra.apply(pair.first(), pair.second()));
+			logger.info("A reducir...");
+			Map<Object, Object> result =  mra.map_reduce();
+			//Transform Map<Object, Object> to Map<String, String>
+			logger.info("Result: "+ result.toString());
+
+			List<Pair> pairResult = new ArrayList<>();
+			for (Object key : result.keySet())
+				pairResult.add(new Pair(key.toString(), result.get(key).toString()));
+			
+			//Save result in DB
+			logger.info("Saving...");
+			user.addDB(new DB(mrRequest.getOutDb(), pairResult));
+			userO.get().addToMRHistory(mrID);
+			dao.updateUsr(user);
+			logger.info("Saved...");
+
+		});
+
+		// Agregar un callback para manejar la finalización del CompletableFuture
+		future.thenRun(() -> {
+			// Aquí puedes realizar cualquier acción después de que el mapReduce se haya completado
+			lock.lock();
+			inCourse.remove(mrID);
+			// Comprobar si el proceso se ejecutó correctamente
+			if (future.isCompletedExceptionally()) {
+				// Ocurrió un error durante el mapReduce
+				// Realizar acciones de manejo de errores...
+
+			} else {
+				// El mapReduce se ejecutó correctamente
+				// Realizar acciones de éxito...
+			}
+			lock.unlock();
 			responseObserver.onNext(RPCMapReduceRequest.newBuilder().setMap(mrRequest.getMap()).build());
 			responseObserver.onCompleted();
-			return;
-		}
-		User user = userO.get();
-		Optional <DB> db = user.getDB(mrRequest.getInDb());
-		if (!db.isPresent())
-		{
-			logger.info("DB not found: "+ mrRequest.getInDb());
-			responseObserver.onCompleted();
-			return;
-		}
-
-		List<Pair> values = db.get().getTables();
-
-		List<SchemePair> schameValues = new ArrayList<>();
+		});
 
 
-		//Aply values to with mra
-		logger.info("A transformar...");
-
-		values.stream().forEach(pair -> schameValues.add(JScheme.list(pair.getKey(),pair.getValue())));
-		schameValues.stream().forEach(pair -> mra.apply(pair.first(), pair.second()));
-		logger.info("A reducir...");
-		Map<Object, Object> result =  mra.map_reduce();
-		//Transform Map<Object, Object> to Map<String, String>
-		logger.info("Result: "+ result.toString());
-
-		List<Pair> pairResult = new ArrayList<>();
-		for (Object key : result.keySet())
-			pairResult.add(new Pair(key.toString(), result.get(key).toString()));
-		
-		//Save result in DB
-		logger.info("Saving...");
-		user.addDB(new DB(mrRequest.getOutDb(), pairResult));
-		dao.updateUsr(user);
-
-		lock.lock();
-		inCourse.remove(mrID);
-		lock.unlock();
-
-		responseObserver.onNext(RPCMapReduceRequest.newBuilder().setMap(mrRequest.getMap()).build());
-		responseObserver.onCompleted();
 	}
 
 	@Override

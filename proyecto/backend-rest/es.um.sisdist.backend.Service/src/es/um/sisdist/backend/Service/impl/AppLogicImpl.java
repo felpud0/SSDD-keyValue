@@ -42,7 +42,6 @@ public class AppLogicImpl
     private final ManagedChannel channel;
     private final GrpcServiceGrpc.GrpcServiceBlockingStub blockingStub;
     private final GrpcServiceGrpc.GrpcServiceStub asyncStub;
-    private HashSet<String> mrInCourse;
 
     static AppLogicImpl instance = new AppLogicImpl();
 
@@ -66,7 +65,6 @@ public class AppLogicImpl
                 .usePlaintext().build();
         blockingStub = GrpcServiceGrpc.newBlockingStub(channel);
         asyncStub = GrpcServiceGrpc.newStub(channel);
-        mrInCourse = new HashSet<String>();
 
     }
 
@@ -128,6 +126,7 @@ public class AppLogicImpl
         registered.setToken(UserUtils.md5pass((userDTO.getName()+userDTO.getEmail())));
         registered.setVisits(0);
         registered.setUid(UserUtils.md5pass(registered.getEmail()));
+        registered.setMRHistory(new ArrayList<>());
 
         dao.addUsr(registered);
         return registered;
@@ -257,6 +256,7 @@ public class AppLogicImpl
         .setOutDb(outDB)
         .setUser(email)
         .setInDb(dbname)
+        .setId(mrID)
         .build( );
         asyncStub.mapReduce(msg, new StreamObserver<RPCMapReduceRequest>() {
             @Override
@@ -279,25 +279,18 @@ public class AppLogicImpl
         return;
     }
 
-    public List<String> getMapReduce(String email, String mrID) {
-        Optional<User> dbOwner = getUserByEmail(email);
-        if  (dbOwner.isEmpty()) {
-            System.out.println("No existe el usuario");
-            return null;
-        }
-        
-        return blockingStub.getProcessingMR(GetProcessingMRRequest.newBuilder().setUser(email).build()).getProcessingIdsList();
+    public boolean isMapReduceFinished(User mrProducer, String mrID) {
+
+        return mrProducer.isInMRHistory(mrID);
+    }
+
+    public boolean isMapReduceProcessing(User mrProducer, String mrID) {
+        return blockingStub
+        .getProcessingMR(GetProcessingMRRequest.newBuilder()
+        .setUser(mrProducer.getEmail()).build())
+        .getProcessingIdsList().contains(mrID);    
     }
     
-    public boolean asynchronusMR(String mrid, String email) {
-        // Llamo a GRPC funcion de getProcessingMR y comprobar que el id que viene en el GET que no esté ahí, si no está ahi´--> Realizada, si no, 20x no ocntent
-    		
-    	System.out.println("CHACHO ENTRO");
-    	
-    	List<String> list = blockingStub.getProcessingMR(GetProcessingMRRequest.newBuilder().setUser(email).build()).getProcessingIdsList();
-    	
-    	return list.contains(mrid);
-    	
-    }
+
 
 }
