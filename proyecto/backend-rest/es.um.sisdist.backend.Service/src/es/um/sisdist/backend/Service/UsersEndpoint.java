@@ -1,5 +1,7 @@
 package es.um.sisdist.backend.Service;
 
+import java.util.Optional;
+
 import es.um.sisdist.backend.Service.impl.AppLogicImpl;
 import es.um.sisdist.backend.dao.models.User;
 import es.um.sisdist.models.UserDTO;
@@ -55,5 +57,18 @@ public class UsersEndpoint
     {
         System.out.println("GET USERS");
         return Response.ok(impl.getAllUsers()).build();
+    }
+
+    @GET
+    @Path("/{username}/processingMR")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProcessingMR(@PathParam("username") String username)
+    {
+        System.out.println("GET PROCESSING MR");
+        Optional<User> u = impl.getUserByEmail(username);
+        if (u.isEmpty()) {
+            return Response.status(Status.NOT_FOUND).entity("No existe el usuario").build();
+        }
+        return Response.ok(impl.getProcessingMR(u.get())).build();
     }
 }

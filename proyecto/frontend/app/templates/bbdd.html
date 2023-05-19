@@ -10,6 +10,12 @@
     </form>
 </div>
 <div>
+    <p>MR procesandose:</p>
+    {% for mr in mrHistorial %}
+    <br> {{ mr }}
+    {% endfor %}
+</div>
+<div>
     <p>Tus bases de datos:</p>
     <form style="display: inline-block;">
         {% for bbdd in bbdds %}
