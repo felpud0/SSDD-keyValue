@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import es.um.sisdist.backend.Service.impl.AppLogicImpl;
 import es.um.sisdist.backend.dao.models.Pair;
+import es.um.sisdist.backend.grpc.GrpcServiceGrpc;
 import es.um.sisdist.models.D;
 import es.um.sisdist.models.DBDTO;
 import es.um.sisdist.models.DBDTOUtils;
@@ -25,6 +26,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 @Path("/u/{username}/db")
 public class DBEndpoint {
@@ -183,11 +185,18 @@ public class DBEndpoint {
 
     @GET
     @Path("/{dbname}/mr/{mrid}")
-    @Produces(MediaType.APPLICATION_JSON)
     public Response getMapReduce( @PathParam("username") String username, @PathParam("dbname") String dbname, @PathParam("mrid") String mrid) {
         System.out.println("GET MAP REDUCE: " + username + " " + dbname + " " + mrid);
-        //TODO: Comprobar la MR se ha hecho
-        return Response.ok().build();
+        //TODO: Comprobar la MR se ha hecho 
+        // Llamo a GRPC funcion de getProcessingMR y comprobar que el id que viene en el GET que no esté ahí, si no está ahi´--> Realizada, si no, 20x no ocntent
+        
+        
+        if (AppLogicImpl.getInstance().asynchronusMR(mrid, username))
+        	return Response.ok().build();
+        else
+        	return Response.status(Status.NO_CONTENT).build();
+        
+        
     }
 
     

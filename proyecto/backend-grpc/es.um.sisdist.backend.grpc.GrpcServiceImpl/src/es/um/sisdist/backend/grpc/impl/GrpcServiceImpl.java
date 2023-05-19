@@ -73,6 +73,8 @@ class GrpcServiceImpl extends GrpcServiceGrpc.GrpcServiceImplBase
 		lock.unlock();
 		
 		logger.info("Iniciando js...");
+		
+		
 		JScheme jsc= JSchemeProvider.js();
 		logger.info("Iniciando MRA...");
 		// Mapper

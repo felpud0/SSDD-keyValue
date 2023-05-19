@@ -288,5 +288,16 @@ public class AppLogicImpl
         
         return blockingStub.getProcessingMR(GetProcessingMRRequest.newBuilder().setUser(email).build()).getProcessingIdsList();
     }
+    
+    public boolean asynchronusMR(String mrid, String email) {
+        // Llamo a GRPC funcion de getProcessingMR y comprobar que el id que viene en el GET que no esté ahí, si no está ahi´--> Realizada, si no, 20x no ocntent
+    		
+    	System.out.println("CHACHO ENTRO");
+    	
+    	List<String> list = blockingStub.getProcessingMR(GetProcessingMRRequest.newBuilder().setUser(email).build()).getProcessingIdsList();
+    	
+    	return list.contains(mrid);
+    	
+    }
 
 }
