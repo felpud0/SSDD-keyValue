@@ -1,0 +1,46 @@
+version: '3'
+services:
+
+  ssdd-frontend:
+    #build: frontend/.
+    image: 127.0.0.1:5000/ssdd-frontend
+    ports:
+      - 5002:5002
+    env_file: mongo.env
+    environment:
+      - FLASK_APP=app/app.py
+      - FLASK_DEBUG=true
+
+  db-mongo:
+    #build: db-mongo/.
+    image: 127.0.0.1:5000/db-mongo
+    restart: always
+    ports:
+      - 27017:27017
+    env_file: mongo.env
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
+      - MONGO_INITDB_DATABASE=ssdd
+
+  backend-rest:
+    #build: backend-rest/es.um.sisdist.backend.Service/.
+    image: 127.0.0.1:5000/backend-rest
+    ports:
+      - 8080:8080
+    env_file: mongo.env
+
+  backend-restexterno:
+    #build: backend-restexterno/es.um.sisdist.backend.restexterno/.
+    image: 127.0.0.1:5000/backend-restexterno
+    ports:
+      - 8180:8180
+    env_file: mongo.env
+
+  backend-grpc:
+    #build: backend-grpc/es.um.sisdist.backend.grpc.GrpcServiceImpl/.
+    image: 127.0.0.1:5000/backend-grpc
+    ports:
+      - 50051:50051
+    env_file: mongo.env
+
