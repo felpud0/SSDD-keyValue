@@ -31,4 +31,4 @@ clean:
 		$(MAKE) -C $$i $@; \
 	done
 
-.PHONY: all run-devel containers frontend backend backend-grpc backend-rest backend-restext clean
+.PHONY: all run-devel containers frontend backend backend-grpc backend-rest backend-restexterno clean
