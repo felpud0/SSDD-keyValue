@@ -12,4 +12,10 @@
 <p> {{ user.name }} </p>
 <p> Number of logins: </p>
 <p> {{ user.visits }} </p>
+<p> Token: </p>
+<p> {{ user.token }} </p>
+<p> MR History: </p>
+{% for mr in user.mrHistory %}
+    <p> {{ mr }} </p>
+{% endfor %}
 {% endblock %}
