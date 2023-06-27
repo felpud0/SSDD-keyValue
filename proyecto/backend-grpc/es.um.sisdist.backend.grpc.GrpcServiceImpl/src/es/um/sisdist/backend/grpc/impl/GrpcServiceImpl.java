@@ -140,7 +140,7 @@ class GrpcServiceImpl extends GrpcServiceGrpc.GrpcServiceImplBase
 		future.thenRun(() -> {
 			// Aquí puedes realizar cualquier acción después de que el mapReduce se haya completado
 			lock.lock();
-			inCourse.remove(mrID);
+			inCourse.get(mrRequest.getUser()).remove(mrID);
 			// Comprobar si el proceso se ejecutó correctamente
 			if (future.isCompletedExceptionally()) {
 				// Ocurrió un error durante el mapReduce

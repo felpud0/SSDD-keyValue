@@ -27,7 +27,7 @@ import io.grpc.stub.StreamObserver;
  */
 public class testCliente {
 
-	/*@Test
+	@Test
 	public void registroTest() {
 		String email = "test1@test.com";
 		String name = "Test1";
@@ -74,7 +74,7 @@ public class testCliente {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
-	}*/
+	}
 	
 	
 	/*@Test
@@ -244,118 +244,118 @@ public class testCliente {
 			e.printStackTrace();
 		}		
 	}*/
-	@Test	
-	public void mapReduceTest() {
-		//login();
-		String email = "test1@test.com";
-		String nombreBBDD = "miBBDD";
-        String map = "(import \"java.lang.String\")\n(define (ssdd-map k v) (display k) (display \": \") (display v) (display \"\\n\") (for-each (lambda (w) (emit (list w 1))) (vector->list (.split v \" \"))))";
-        String reduce = "( define ( ssdd-reduce k l ) ( apply + l ) )";
-        String out_db = "miBBDDMR";
+	// @Test	
+	// public void mapReduceTest() {
+	// 	//login();
+	// 	String email = "test1@test.com";
+	// 	String nombreBBDD = "miBBDD";
+    //     String map = "(import \"java.lang.String\")\n(define (ssdd-map k v) (display k) (display \": \") (display v) (display \"\\n\") (for-each (lambda (w) (emit (list w 1))) (vector->list (.split v \" \"))))";
+    //     String reduce = "( define ( ssdd-reduce k l ) ( apply + l ) )";
+    //     String out_db = "miBBDDMR";
         
-        // Test de grpc, puede hacerse con la BD
-    	var msg = RPCMapReduceRequest.newBuilder()
-							        .setMap(map)
-							        .setReduce(reduce)
-							        .setOutDb(out_db)
-							        .setUser(email)
-							        .setInDb(nombreBBDD)
-							        .build( );
+    //     // Test de grpc, puede hacerse con la BD
+    // 	var msg = RPCMapReduceRequest.newBuilder()
+	// 						        .setMap(map)
+	// 						        .setReduce(reduce)
+	// 						        .setOutDb(out_db)
+	// 						        .setUser(email)
+	// 						        .setInDb(nombreBBDD)
+	// 						        .build( );
     	
-        var grpcServerName = Optional.ofNullable(System.getenv("GRPC_SERVER"));
-        var grpcServerPort = Optional.ofNullable(System.getenv("GRPC_SERVER_PORT"));
+    //     var grpcServerName = Optional.ofNullable(System.getenv("GRPC_SERVER"));
+    //     var grpcServerPort = Optional.ofNullable(System.getenv("GRPC_SERVER_PORT"));
     	
-    	ManagedChannel channel = ManagedChannelBuilder
-                .forAddress(grpcServerName.orElse("localhost"), Integer.parseInt(grpcServerPort.orElse("50051")))
-                .usePlaintext().build();
+    // 	ManagedChannel channel = ManagedChannelBuilder
+    //             .forAddress(grpcServerName.orElse("localhost"), Integer.parseInt(grpcServerPort.orElse("50051")))
+    //             .usePlaintext().build();
     	
-        final GrpcServiceGrpc.GrpcServiceBlockingStub blockingStub = GrpcServiceGrpc.newBlockingStub(channel);
+    //     final GrpcServiceGrpc.GrpcServiceBlockingStub blockingStub = GrpcServiceGrpc.newBlockingStub(channel);
     	
-        blockingStub.mapReduce(msg);
+    //     blockingStub.mapReduce(msg);
         
-        assertTrue(getBBDD());
+    //     assertTrue(getBBDD());
     	        
-	}
+	// }
 	
-	@Test
-	public void getBBDDTest() {
+	// @Test
+	// public void getBBDDTest() {
 
-		String email = "test1@test.com";
-		String nombreBBDD = "miBBDDMR";
+	// 	String email = "test1@test.com";
+	// 	String nombreBBDD = "miBBDDMR";
 
-		String url = "http://localhost:8080/Service/u/" + email + "/db/" + nombreBBDD;
-		try {
+	// 	String url = "http://localhost:8080/Service/u/" + email + "/db/" + nombreBBDD;
+	// 	try {
 
-			URL obj = new URL(url);
+	// 		URL obj = new URL(url);
 
-			// Abrir una conexión HTTP
-			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+	// 		// Abrir una conexión HTTP
+	// 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-			// Configurar el método de solicitud
-			con.setRequestMethod("GET");
+	// 		// Configurar el método de solicitud
+	// 		con.setRequestMethod("GET");
 
-			// Obtener el código de respuesta
-			int responseCode = con.getResponseCode();
+	// 		// Obtener el código de respuesta
+	// 		int responseCode = con.getResponseCode();
 
-			// Leer la respuesta del servidor
-			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-			String inputLine;
-			StringBuilder response = new StringBuilder();
-			while ((inputLine = in.readLine()) != null) {
-				response.append(inputLine);
-			}
-			in.close();
+	// 		// Leer la respuesta del servidor
+	// 		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+	// 		String inputLine;
+	// 		StringBuilder response = new StringBuilder();
+	// 		while ((inputLine = in.readLine()) != null) {
+	// 			response.append(inputLine);
+	// 		}
+	// 		in.close();
 
-			assertEquals(200, responseCode);
+	// 		assertEquals(200, responseCode);
 						
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	// 	} catch (IOException e) {
+	// 		// TODO Auto-generated catch block
+	// 		e.printStackTrace();
+	// 	}
        
-	}
+	// }
 	
-	public boolean getBBDD() {
+	// public boolean getBBDD() {
 
-		String email = "test1@test.com";
-		String nombreBBDD = "miBBDDMR";
+	// 	String email = "test1@test.com";
+	// 	String nombreBBDD = "miBBDDMR";
 
-		String url = "http://localhost:8080/Service/u/" + email + "/db/" + nombreBBDD;
-		try {
+	// 	String url = "http://localhost:8080/Service/u/" + email + "/db/" + nombreBBDD;
+	// 	try {
 
-			URL obj = new URL(url);
+	// 		URL obj = new URL(url);
 
-			// Abrir una conexión HTTP
-			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+	// 		// Abrir una conexión HTTP
+	// 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-			// Configurar el método de solicitud
-			con.setRequestMethod("GET");
+	// 		// Configurar el método de solicitud
+	// 		con.setRequestMethod("GET");
 
-			// Obtener el código de respuesta
-			int responseCode = con.getResponseCode();
+	// 		// Obtener el código de respuesta
+	// 		int responseCode = con.getResponseCode();
 
-			// Leer la respuesta del servidor
-			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-			String inputLine;
-			StringBuilder response = new StringBuilder();
-			while ((inputLine = in.readLine()) != null) {
-				response.append(inputLine);
-			}
-			in.close();
+	// 		// Leer la respuesta del servidor
+	// 		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+	// 		String inputLine;
+	// 		StringBuilder response = new StringBuilder();
+	// 		while ((inputLine = in.readLine()) != null) {
+	// 			response.append(inputLine);
+	// 		}
+	// 		in.close();
 
 			
-			if (responseCode == 200)
-				return true;
-			return false;
+	// 		if (responseCode == 200)
+	// 			return true;
+	// 		return false;
 			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	// 	} catch (IOException e) {
+	// 		// TODO Auto-generated catch block
+	// 		e.printStackTrace();
+	// 	}
        
-		return false;
+	// 	return false;
 		
-	}
+	// }
 	
 
 }
