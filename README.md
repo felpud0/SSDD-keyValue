@@ -53,6 +53,12 @@ Tras esperar a que se procese el map-reduce, cuando actualizemos la página, pod
 ![Map-Reduce]( images/dbmrresult.png)
 
 
+## :computer: Cliente externo (Insomnia) 
+Se realiza la peticion con las cabeceras User, Date y Auth-Token (md5(URL_de_peticion+fecha+token_usuario) [Aqui un ejemplo](https://gchq.github.io/CyberChef/#recipe=MD5()&input=aHR0cDovL2xvY2FsaG9zdDo4MTgwL3Jlc3RleHRlcm5vL3UvdGVzdHVzZXJAZXhhbXBsZS5jb20vZGIvdGVzdGRiL2Qva2V5MTIwMTAtMDEtMDFUMTI6MDA6MDBaOTRhYzJkNjZmMTAzZmVlZjAzMzIwNDc1NjJiNzllNDI) ) tal y como se indicaba en la especificacion del proyecto.
+
+Aqui se puede ver la respuesta correcta del servidor:
+![Insonmia]( images/insomnia.png)
+
 
 
 # Docker Swarm y Stack
